@@ -20,5 +20,5 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: 'try1'
-          directory: YOUR_DIRECTORY_OF_STATIC_ASSETS # e.g. 'dist'
+          directory: '.svelte-kit/cloudflare' # e.g. 'dist'
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
