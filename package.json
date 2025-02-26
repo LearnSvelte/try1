@@ -3,7 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "private": true,
-  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": "18.20.4",
+    "pnpm": ">=9.15.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -11,6 +15,9 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+  },
+  "dependencies": {
+    "@picocss/pico": "^2.0.6"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.3.0",
@@ -23,14 +30,12 @@
     "svelte-check": "^4.0.0",
     "svelte-eslint-parser": "^0.43.0",
     "typescript": "^5.0.0",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "wrangler": "^3.110.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  },
-  "dependencies": {
-    "@picocss/pico": "^2.0.6"
   }
 }
