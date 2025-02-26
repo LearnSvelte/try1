@@ -9,6 +9,7 @@ const config = {
 
 	kit: {
 		adapter: adapter({
+      pages: true,
 			// See below for an explanation of these options
 			routes: {
 				include: ['/*'],
