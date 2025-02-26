@@ -26,7 +26,8 @@
   "kv_namespaces": [
     {
       "binding": "BINDING_NAME",
-      "id": "4edb3483e058482db60671bf6763922a"
+      "id": "4edb3483e058482db60671bf6763922a",
+      "preview_id": "preview_id"
     }
   ]
 

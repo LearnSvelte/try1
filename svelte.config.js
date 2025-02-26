@@ -17,9 +17,9 @@ const config = {
       },
       platformProxy: {
         configPath: 'wrangler.jsonc',
-        environment: undefined,
-        experimentalJsonConfig: false,
-        persist: false,
+        // environment: undefined,
+        // experimentalJsonConfig: false,
+        persist: './worker-persist',
       },
     }),
   },
