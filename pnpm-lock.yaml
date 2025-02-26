@@ -8,9 +8,6 @@ onlyBuiltDependencies:
   - esbuild
 
 devDependencies:
-  '@sveltejs/adapter-auto':
-    specifier: ^4.0.0
-    version: 4.0.0(@sveltejs/kit@2.17.3)
   '@sveltejs/adapter-cloudflare':
     specifier: ^5.0.3
     version: 5.0.3(@sveltejs/kit@2.17.3)(wrangler@3.110.0)
@@ -1041,15 +1038,6 @@ packages:
     os: [win32]
     dev: true
     optional: true
-
-  /@sveltejs/adapter-auto@4.0.0(@sveltejs/kit@2.17.3):
-    resolution: {integrity: sha512-kmuYSQdD2AwThymQF0haQhM8rE5rhutQXG4LNbnbShwhMO4qQGnKaaTy+88DuNSuoQDi58+thpq8XpHc1+oEKQ==}
-    peerDependencies:
-      '@sveltejs/kit': ^2.0.0
-    dependencies:
-      '@sveltejs/kit': 2.17.3(@sveltejs/vite-plugin-svelte@5.0.3)(svelte@5.20.4)(vite@6.2.0)
-      import-meta-resolve: 4.1.0
-    dev: true
 
   /@sveltejs/adapter-cloudflare@5.0.3(@sveltejs/kit@2.17.3)(wrangler@3.110.0):
     resolution: {integrity: sha512-jRJmt3JtGp5ockFxoDLKPisK0RPGnitNfHS9+xhRTpRaBV7jS/fQfAmpaey7rwKWaDUnkoHx0DV0WvISHNfUEA==}
