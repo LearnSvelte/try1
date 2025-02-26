@@ -1,13 +1,13 @@
 <script>
-  // export let data;
+// export let data;
 </script>
 
-<main>
+<div>
   <header>
     <h1>URL shortener</h1>
     <nav>
-      <a href="/">Головна</a>
-      <a href="/about">Про нас</a>
+      <a href="/">Shortener</a>
+      <a href="/list">List</a>
     </nav>
   </header>
 
@@ -16,7 +16,7 @@
   <footer>
     <p>© 2025</p>
   </footer>
-</main>
+</div>
 
 <style>
   nav {
