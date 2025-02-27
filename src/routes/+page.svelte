@@ -7,7 +7,6 @@
     event.preventDefault()
     console.log('Long URL:', longUrl)
     console.log('Short URL:', shortUrl)
-  // Later you would use your model here to save the URL mapping
   }
 </script>
 

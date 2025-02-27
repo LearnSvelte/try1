@@ -16,21 +16,20 @@ async function postToKV({ key, value }: { key: string, value: string }): Promise
   }
 }
 
+/** @throws */
 export async function saveToKV({ key, value }: { key: string, value: string }): Promise<true> {
-  // return catchError(checkKVByKey(key))
+  const [checkError, checkResult] = await catchError(checkKVByKey(key))
 
-  const [_checkError, checkResult] = await catchError(checkKVByKey(key))
-
-  if (_checkError)
-    throw _checkError
+  if (checkError)
+    throw checkError
 
   if (checkResult)
     throw new Error('❌ Ключ уже существует в KV!')
 
-  const [_postError, postResult] = await catchError(postToKV({ key, value }))
+  const [postError, postResult] = await catchError(postToKV({ key, value }))
 
-  if (_postError)
-    throw _postError
+  if (postError)
+    throw postError
 
   if (!postResult)
     throw new Error('❌ Ошибка при записи в KV!')
