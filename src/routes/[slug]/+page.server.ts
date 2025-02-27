@@ -10,15 +10,24 @@ import { SLUG_PREFIX } from '$lib/constants/slug'
 
 import { redirect } from '@sveltejs/kit'
 
-export const load: PageServerLoad = async ({ params, platform }) => {
+export const load: PageServerLoad = async ({ params, platform, request }) => {
   console.log('load --------------------------------------------------')
+
+  const _country = request.headers.get('cf-ipcountry') ?? 'Unknown'
+  const _ip = request.headers.get('cf-connecting-ip') ?? 'Unknown'
+  const _userAgent = request.headers.get('user-agent') ?? 'Unknown'
+  const _timestamp = new Date().toISOString()
+
   const { slug } = params
   const key = `${SLUG_PREFIX}${slug}`
   let url
 
   try {
-    console.log('try- --------------')
     url = await platform?.env.BINDING_NAME.get(key, 'text')
+
+    // const { value, metadata } = await platform?.env.BINDING_NAME.getWithMetadata(key, { type: 'text' })
+    // console.log('metadata-----------', metadata)
+
     console.log('url:', url)
   }
   catch (error) {
@@ -27,12 +36,10 @@ export const load: PageServerLoad = async ({ params, platform }) => {
 
   if (url) {
     // count visit
-    return redirect(302, url)
+    // return redirect(302, url)
   }
 
-  // const url = await getURLBySlug(slug)
-
-  console.log('slug:', slug)
+  // console.log('slug:', slug)
 
   return {
     slug,
