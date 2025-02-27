@@ -17,11 +17,8 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
 
   try {
     url = await platform?.env.BINDING_NAME.get(key, 'text')
-
-    console.log('url:', url)
   }
   catch (error) {
-    console.log('catch- --------------', error)
     urlError = (error as Error).message
   }
 
@@ -41,7 +38,7 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
     console.log('response:', response)
 
     // count visit
-    // return redirect(302, url)
+    return redirect(302, url)
   }
 
   // console.log('slug:', slug)
