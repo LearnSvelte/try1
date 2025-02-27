@@ -19,13 +19,12 @@
 
 <form on:submit={handleSubmit}>
   <input
-    type="text"
+    type="url"
     name="url"
     placeholder="URL"
     bind:value={url}
     required
     title="Please enter a valid URL starting with http:// or https://"
-    pattern="https?://[a-zA-Z0-9.-]+"
     autocomplete="off"
     style="text-align: center"
   />

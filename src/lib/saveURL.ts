@@ -1,6 +1,5 @@
+import { SLUG_PREFIX } from './constants/slug'
 import { saveToKV } from './saveToKV'
-
-const SLUG_PREFIX = 'SLUG:'
 
 /** @throws */
 export function saveURL({ url, slug }: { url: string, slug: string }): Promise<true> {
