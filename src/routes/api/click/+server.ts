@@ -1,4 +1,5 @@
 import type { RequestHandler } from './$types'
+import { CLICK_PREFIX } from '$lib/constants/click'
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   if (!platform || !platform.env) {
@@ -12,9 +13,14 @@ export const POST: RequestHandler = async ({ request, platform }) => {
   }
 
   try {
-    const { key, value } = await request.json()
-    await kv.put(key, value)
-    return new Response(`✅ Saved ${key}: ${value}`, { status: 200 })
+    const { slug, data } = await request.json()
+
+    const previousValue = await kv.get(`${CLICK_PREFIX}${slug}`, 'json')
+    const value = previousValue ? [data, ...previousValue] : [data]
+
+    const key = `${CLICK_PREFIX}${slug}`
+    await kv.put(key, JSON.stringify(value))
+    return new Response(`✅ Saved ${key}`, { status: 200 })
   }
   catch (error) {
     console.error('❌ KV put error:', error)

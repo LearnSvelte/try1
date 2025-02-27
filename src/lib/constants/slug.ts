@@ -1,1 +1,1 @@
-export const SLUG_PREFIX = 'SLUG:'
+export const SLUG_PREFIX = 'SLUG_'

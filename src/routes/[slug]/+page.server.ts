@@ -1,6 +1,7 @@
 import type { PageServerLoad } from './$types'
 // import { getURLBySlug } from '$lib/getURLBySlug'
 import { SLUG_PREFIX } from '$lib/constants/slug'
+import { saveClick } from '$lib/saveClick'
 
 // get url by slug
 
@@ -8,7 +9,7 @@ import { SLUG_PREFIX } from '$lib/constants/slug'
 //   redirect(307, '/b')
 // }
 
-export const load: PageServerLoad = async ({ params, platform, request }) => {
+export const load: PageServerLoad = async ({ params, platform, request, fetch }) => {
   console.log('load --------------------------------------------------')
 
   const _country = request.headers.get('cf-ipcountry') ?? 'Unknown'
@@ -20,8 +21,10 @@ export const load: PageServerLoad = async ({ params, platform, request }) => {
   const key = `${SLUG_PREFIX}${slug}`
   let url
 
+  const { put, get } = platform?.env.BINDING_NAME
+
   try {
-    url = await platform?.env.BINDING_NAME.get(key, 'text')
+    url = await get(key, 'text')
 
     // const { value, metadata } = await platform?.env.BINDING_NAME.getWithMetadata(key, { type: 'text' })
     // console.log('metadata-----------', metadata)
@@ -33,6 +36,20 @@ export const load: PageServerLoad = async ({ params, platform, request }) => {
   }
 
   if (url) {
+    const clickData = JSON.stringify({ country: _country, ip: _ip, userAgent: _userAgent, timestamp: _timestamp })
+
+    // const res = url = await platform?.env.BINDING_NAME.put(key, 'text')
+
+    // await saveClick({ slug, value: clickData })
+
+    const response = await fetch('/api/click', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug, value: clickData }),
+    })
+
+    console.log('response:', response)
+
     // count visit
     // return redirect(302, url)
   }

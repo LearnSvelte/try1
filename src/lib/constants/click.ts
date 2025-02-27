@@ -1,1 +1,1 @@
-export const CLICK_PREFIX = 'CLICK:'
+export const CLICK_PREFIX = 'CLICK_'
