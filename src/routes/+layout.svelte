@@ -1,12 +1,13 @@
 <script>
-// export let data;
+  let icons = ['⚔️', '🗡️', '🏹', '🔥', '🔪', '🪓', '✂️']
+  let selectedIcon = icons[Math.floor(Math.random() * icons.length)]
 </script>
 
 <div>
   <header>
-    <h1>URL shortener</h1>
+    <h1>URL shortener  {selectedIcon}</h1>
     <nav>
-      <a href="/">Shortener</a>
+      <a href="/">Home</a>
       <a href="/list">List</a>
       <a href="/kv">KV</a>
     </nav>
