@@ -6,7 +6,7 @@
 
   let url: string = ''
   let slug: string = ''
-  let isSubmitting = false
+  let error: string = ''
   let submitState: 'idle' | 'submitting' | 'success' | 'error' = 'idle'
 
   async function handleSubmit (event: Event) {
@@ -18,6 +18,9 @@
     const [err, data] = await catchError(saveURL({ url, slug }))
     if (err) {
       submitState = 'error'
+      console.log('Error @:', err)
+      console.log('Error @2:', err.message)
+      error = err.message
     }
     else {
       submitState = 'success'
@@ -25,11 +28,18 @@
     console.log('Error:', err)
     console.log('Data:', data)
   }
+
+  function handleReset () {
+    submitState = 'idle'
+  }
 </script>
 
 <p>{submitState}</p>
 
-<form on:submit={handleSubmit}>
+<form
+  on:submit={handleSubmit}
+  on:reset={handleReset}
+>
   <input
     type="url"
     name="url"
@@ -66,11 +76,25 @@
   >
     Submit
   </button>
+
+  <button
+    type="reset"
+  >
+    Reset
+  </button>
 </form>
 
-<p>
-  <a href="/{slug}">Go to short url</a>
-</p>
-<p>
-  <a href="/{slug}/stats">Go to stats</a>
-</p>
+{#if submitState === 'error'}
+  <p>
+    {error}
+  </p>
+{/if}
+
+{#if submitState === 'success'}
+  <p>
+    <a href="/{slug}">Go to short url</a>
+  </p>
+  <p>
+    <a href="/{slug}/stats">Go to stats</a>
+  </p>
+{/if}
