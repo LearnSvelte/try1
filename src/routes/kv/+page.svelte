@@ -1,23 +1,21 @@
 <script>
+  import { catchError } from '$lib/catchError'
+  import { saveToKV } from '$lib/saveToKV'
+
   let message = ''
 
-  async function saveToKV() {
-    const response = await fetch('/api/kv', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key: 'testKey', value: 'Hello from SvelteKit & Cloudflare!' }),
-    })
+  const key = 'k1'
+  const value = 'v1'
 
-    if (response.ok) {
-      message = '✅ Данные успешно записаны в KV!'
-    }
-    else {
-      message = '❌ Ошибка при записи в KV!'
-    }
+  async function f2() {
+    const [error, result] = await catchError(saveToKV({ key, value }))
+    if (error)
+      console.log(error)
+    console.log(result)
   }
 </script>
 
-<button on:click={saveToKV} class="btn">
+<button on:click={f2}>
   Записать в KV
 </button>
 
