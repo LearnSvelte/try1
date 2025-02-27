@@ -13,19 +13,18 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   const { slug } = params
   const key = `${SLUG_PREFIX}${slug}`
   let url
+  let urlError: string = ''
 
   const { get } = platform?.env.BINDING_NAME
 
   try {
     url = await get(key, 'text')
 
-    // const { value, metadata } = await platform?.env.BINDING_NAME.getWithMetadata(key, { type: 'text' })
-    // console.log('metadata-----------', metadata)
-
     console.log('url:', url)
   }
   catch (error) {
     console.log('catch- --------------', error)
+    urlError = (error as Error).message
   }
 
   if (url) {
@@ -52,5 +51,6 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   return {
     slug,
     url,
+    urlError,
   }
 }
