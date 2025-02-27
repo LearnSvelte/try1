@@ -1,13 +1,5 @@
 import type { PageServerLoad } from './$types'
-// import { getURLBySlug } from '$lib/getURLBySlug'
 import { SLUG_PREFIX } from '$lib/constants/slug'
-import { saveClick } from '$lib/saveClick'
-
-// get url by slug
-
-// export function load() {
-//   redirect(307, '/b')
-// }
 
 export const load: PageServerLoad = async ({ params, platform, request, fetch }) => {
   console.log('load --------------------------------------------------')
@@ -21,7 +13,7 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   const key = `${SLUG_PREFIX}${slug}`
   let url
 
-  const { put, get } = platform?.env.BINDING_NAME
+  const { get } = platform?.env.BINDING_NAME
 
   try {
     url = await get(key, 'text')
@@ -45,7 +37,7 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
     const response = await fetch('/api/click', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug, value: clickData }),
+      body: JSON.stringify({ slug, data: clickData }),
     })
 
     console.log('response:', response)
