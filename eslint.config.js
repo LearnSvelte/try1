@@ -13,6 +13,15 @@ export default antfu(
           avoidInvalidUnquotedInHTML: false,
         },
       }],
+
+      'style/space-before-function-paren': [
+        2,
+        {
+          anonymous: 'always',
+          named: 'always',
+          asyncArrow: 'always',
+        },
+      ],
     },
   },
 )

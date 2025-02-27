@@ -1,6 +1,6 @@
 <script>
-  let icons = ['⚔️', '🗡️', '🏹', '🔥', '🔪', '🪓', '✂️']
-  let selectedIcon = icons[Math.floor(Math.random() * icons.length)]
+  const icons = ['⚔️', '🗡️', '🏹', '🔥', '🔪', '🪓', '✂️']
+  const selectedIcon = icons[Math.floor(Math.random() * icons.length)]
 </script>
 
 <div>

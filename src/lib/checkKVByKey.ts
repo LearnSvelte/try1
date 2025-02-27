@@ -1,4 +1,4 @@
-export async function checkKVByKey(key: string): Promise<boolean> {
+export async function checkKVByKey (key: string): Promise<boolean> {
   try {
     const encodedKey = encodeURIComponent(key)
     const checkResponse = await fetch(`/api/kv?key=${encodedKey}`)

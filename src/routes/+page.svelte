@@ -6,7 +6,7 @@
   let slug: string = ''
   let currentUrl = window.location.href
 
-  async function handleSubmit(event: Event) {
+  async function handleSubmit (event: Event) {
     event.preventDefault()
     console.log('Long URL:', url)
     console.log('Short URL:', slug)

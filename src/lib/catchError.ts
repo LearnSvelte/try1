@@ -8,7 +8,7 @@
  * @example
  * const [error, data] = await catchError(fetch('https://example.com'));
  */
-export async function catchError<T>(promise: Promise<T>): Promise<[undefined, T] | [Error]> {
+export async function catchError<T> (promise: Promise<T>): Promise<[undefined, T] | [Error]> {
   try {
     const data = await promise
     return [undefined, data]

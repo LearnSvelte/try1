@@ -2,12 +2,12 @@
   import { catchError } from '$lib/catchError'
   import { saveToKV } from '$lib/saveToKV'
 
-  let message = ''
+  const message = ''
 
   const key = 'k1'
   const value = 'v1'
 
-  async function f2() {
+  async function f2 () {
     const [error, result] = await catchError(saveToKV({ key, value }))
     if (error)
       console.log(error)

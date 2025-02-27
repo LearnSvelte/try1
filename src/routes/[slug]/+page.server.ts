@@ -8,8 +8,6 @@ import { SLUG_PREFIX } from '$lib/constants/slug'
 //   redirect(307, '/b')
 // }
 
-import { redirect } from '@sveltejs/kit'
-
 export const load: PageServerLoad = async ({ params, platform, request }) => {
   console.log('load --------------------------------------------------')
 

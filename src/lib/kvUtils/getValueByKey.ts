@@ -1,4 +1,4 @@
-export async function getValueByKey(key: string): Promise<{ data: string, exists: boolean }> {
+export async function getValueByKey (key: string): Promise<{ data: string, exists: boolean }> {
   console.log('getValueByKey key:', key)
 
   try {
@@ -15,7 +15,7 @@ export async function getValueByKey(key: string): Promise<{ data: string, exists
     }
 
     const data = await checkResponse.json()
-    console.log('getValueByKey data:', data);
+    console.log('getValueByKey data:', data)
     return data
   }
   catch (error) {

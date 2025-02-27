@@ -1,7 +1,7 @@
 import { catchError } from './catchError'
 import { checkKVByKey } from './checkKVByKey'
 
-async function postToKV({ key, value }: { key: string, value: string }): Promise<true> {
+async function postToKV ({ key, value }: { key: string, value: string }): Promise<true> {
   const response = await fetch('/api/kv', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -17,7 +17,7 @@ async function postToKV({ key, value }: { key: string, value: string }): Promise
 }
 
 /** @throws */
-export async function saveToKV({ key, value }: { key: string, value: string }): Promise<true> {
+export async function saveToKV ({ key, value }: { key: string, value: string }): Promise<true> {
   const [checkError, checkResult] = await catchError(checkKVByKey(key))
 
   if (checkError)
