@@ -17,7 +17,7 @@
   <slot />
 
   <footer>
-    <p>© 2025</p>
+    <p>© 2025. 🍉</p>
   </footer>
 </div>
 

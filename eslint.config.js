@@ -22,6 +22,20 @@ export default antfu(
           asyncArrow: 'always',
         },
       ],
+
+      'no-unused-vars': 0,
+      'ts/no-unused-vars': [
+        2,
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
     },
   },
 )

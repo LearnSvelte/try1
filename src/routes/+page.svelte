@@ -13,14 +13,20 @@
   let slugIsValid = $state(false)
 
   function validateUrl () {
-    console.log('Validating URL:', url)
     try {
       const _newUrl = new URL(url)
       urlIsValid = true
     }
+    // eslint-disable-next-line unused-imports/no-unused-vars
     catch (_err: unknown) {
       urlIsValid = false
     }
+  }
+
+  function validateSlug (): void {
+    if (submitState === 'error')
+      submitState = 'validating'
+    slugIsValid = /^[\w\-]+$/.test(slug)
   }
 
   async function handleSubmit (event: Event) {
@@ -29,8 +35,9 @@
     event.preventDefault()
 
     validateUrl()
+    validateSlug()
 
-    if (!urlIsValid)
+    if (!urlIsValid || !slugIsValid)
       return
 
     console.log('Long URL:', url)
@@ -71,13 +78,25 @@
       return null
     return urlIsValid ? 'false' : 'true'
   }
+
+  function getIsSlugValid () {
+    if (submitState === 'idle')
+      return null
+    return slugIsValid ? 'false' : 'true'
+  }
+
+  function getIsSubmitDisabled () {
+    if (submitState === 'validating' && urlIsValid && slugIsValid)
+      return false
+    return submitState !== 'idle'
+  }
 </script>
 
 <p>{submitState}</p>
 
 <form
-  on:submit={handleSubmit}
-  on:reset={handleReset}
+  onsubmit={handleSubmit}
+  onreset={handleReset}
 >
   <input
     type="url"
@@ -89,7 +108,7 @@
     autocomplete="off"
     aria-invalid={getIsUrlValid()}
     style="text-align: center"
-    on:input={handleUrlInput}
+    oninput={handleUrlInput}
   />
 
   <!-- svelte-ignore a11y_no_redundant_roles -->
@@ -109,21 +128,27 @@
       autocomplete="off"
       title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
       bind:value={slug}
+      aria-invalid={getIsSlugValid()}
+      oninput={validateSlug}
     />
   </fieldset>
-  <button
-    type="submit"
-    disabled={submitState !== 'idle'}
-    on:click={handleSubmit}
-  >
-    Submit
-  </button>
 
-  <button
-    type="reset"
-  >
-    Reset
-  </button>
+  <fieldset role="group">
+    <button
+      type="reset"
+      disabled={url === '' && slug === ''}
+    >
+      Reset
+    </button>
+    <button
+      type="submit"
+      disabled={getIsSubmitDisabled()}
+      onclick={handleSubmit}
+    >
+      Submit
+    </button>
+  </fieldset>
+
 </form>
 
 {#if submitState === 'error'}
@@ -135,8 +160,6 @@
 {#if submitState === 'success'}
   <p>
     <a href="/{slug}">Go to short url</a>
-  </p>
-  <p>
     <a href="/{slug}/stats">Go to stats</a>
   </p>
 {/if}
