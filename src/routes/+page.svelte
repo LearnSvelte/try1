@@ -6,17 +6,28 @@
 
   let url: string = ''
   let slug: string = ''
+  let isSubmitting = false
+  let submitState: 'idle' | 'submitting' | 'success' | 'error' = 'idle'
 
   async function handleSubmit (event: Event) {
     event.preventDefault()
     console.log('Long URL:', url)
     console.log('Short URL:', slug)
 
+    submitState = 'submitting'
     const [err, data] = await catchError(saveURL({ url, slug }))
+    if (err) {
+      submitState = 'error'
+    }
+    else {
+      submitState = 'success'
+    }
     console.log('Error:', err)
     console.log('Data:', data)
   }
 </script>
+
+<p>{submitState}</p>
 
 <form on:submit={handleSubmit}>
   <input
@@ -49,7 +60,12 @@
       bind:value={slug}
     />
   </fieldset>
-  <button type="submit">Submit</button>
+  <button
+    type="submit"
+    disabled={submitState !== 'idle'}
+  >
+    Submit
+  </button>
 </form>
 
 <p>

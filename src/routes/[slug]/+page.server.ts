@@ -44,7 +44,7 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
     console.log('response:', response)
 
     // count visit
-    return redirect(302, url)
+    // return redirect(302, url)
   }
 
   // console.log('slug:', slug)
