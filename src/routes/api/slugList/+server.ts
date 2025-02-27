@@ -8,6 +8,8 @@ export const GET: RequestHandler = async ({ platform }) => {
   try {
     const result = await platform.env.BINDING_NAME.list({ prefix: 'SLUG_', limit: 1000 })
 
+    console.log('result---------', result)
+
     return new Response(JSON.stringify(result.keys.map(k => k.name)), {
       headers: { 'Content-Type': 'application/json' },
     })

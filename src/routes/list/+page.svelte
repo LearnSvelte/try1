@@ -4,8 +4,6 @@
 
   let slugs: string[] = $state([])
 
-  // let slugs: string[] = []
-
   async function fetchSlugs () {
     const res = await fetch('/api/slugList')
     const keys = await res.json()
@@ -14,9 +12,8 @@
 
   async function deleteKey (event: Event) {
     const button = event.currentTarget as HTMLButtonElement
-    const slug = button.dataset.slug // Получаем ключ из data-атрибута
+    const slug = button.dataset.slug
     const key = SLUG_PREFIX + slug
-    console.log('deleteKey', key)
 
     if (!key)
       return
