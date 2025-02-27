@@ -26,6 +26,7 @@ export const load: PageServerLoad = async ({ params, platform }) => {
   }
 
   if (url) {
+    // count visit
     return redirect(302, url)
   }
 
