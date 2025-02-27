@@ -15,10 +15,8 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   let url
   let urlError: string = ''
 
-  const { get } = platform?.env.BINDING_NAME
-
   try {
-    url = await get(key, 'text')
+    url = await platform?.env.BINDING_NAME.get(key, 'text')
 
     console.log('url:', url)
   }
