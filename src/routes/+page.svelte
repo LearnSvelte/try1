@@ -1,25 +1,31 @@
 <script lang="ts">
-  let longUrl: string = ''
-  let shortUrl: string = ''
+  import { catchError } from '$lib/catchError'
+  import { saveURL } from '$lib/saveURL'
+
+  let url: string = ''
+  let slug: string = ''
   let currentUrl = window.location.href
 
-  function handleSubmit(event: Event) {
+  async function handleSubmit(event: Event) {
     event.preventDefault()
-    console.log('Long URL:', longUrl)
-    console.log('Short URL:', shortUrl)
+    console.log('Long URL:', url)
+    console.log('Short URL:', slug)
+
+    const [err, data] = await catchError(saveURL({ url, slug }))
+    console.log('Error:', err)
+    console.log('Data:', data)
   }
 </script>
 
 <form on:submit={handleSubmit}>
   <input
     type="text"
-    name="longurl"
-    placeholder="Long URL"
-    bind:value={longUrl}
+    name="url"
+    placeholder="URL"
+    bind:value={url}
     required
     title="Please enter a valid URL starting with http:// or https://"
-    data-pattern="https?://.+"
-    pattern="https?://.*\.[a-z]+"
+    pattern="https?://[a-zA-Z0-9.-]+"
     autocomplete="off"
     style="text-align: center"
   />
@@ -34,21 +40,21 @@
     />
     <input
       type="text"
-      name="shorturl"
-      placeholder="Short URL"
+      name="slug"
+      placeholder="slug"
       required
       pattern="[A-Za-z0-9_\-]+"
       autocomplete="off"
       title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
-      bind:value={shortUrl}
+      bind:value={slug}
     />
   </fieldset>
   <button type="submit">Submit</button>
 </form>
 
 <p>
-  <a href="/{shortUrl}">Go to short url</a>
+  <a href="/{slug}">Go to short url</a>
 </p>
 <p>
-  <a href="/{shortUrl}/stats">Go to stats</a>
+  <a href="/{slug}/stats">Go to stats</a>
 </p>
