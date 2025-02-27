@@ -4,7 +4,7 @@ export async function checkKVByKey(key: string): Promise<boolean> {
     const checkResponse = await fetch(`/api/kv?key=${encodedKey}`)
 
     if (checkResponse.status === 404) {
-      return false // Key doesn't exist
+      return false
     }
 
     if (!checkResponse.ok) {
@@ -13,6 +13,7 @@ export async function checkKVByKey(key: string): Promise<boolean> {
     }
 
     const data = await checkResponse.json()
+    console.log('checkKVByKey data:', data)
     return data.exists === true
   }
   catch (error) {

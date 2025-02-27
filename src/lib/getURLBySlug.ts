@@ -4,7 +4,8 @@ import { getValueByKey } from './kvUtils/getValueByKey'
 export async function getURLBySlug(slug: string): Promise<string | null> {
   const key = `${SLUG_PREFIX}${slug}`
 
-  const result = await getValueByKey(key)
+  const { value, exists } = await getValueByKey(key)
 
-  return result
+  console.log('getURLBySlug value:', value)
+  return value
 }
