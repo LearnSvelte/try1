@@ -74,3 +74,26 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     )
   }
 }
+
+export const DELETE: RequestHandler = async ({ platform, request }) => {
+  if (!platform?.env?.BINDING_NAME) {
+    return new Response(JSON.stringify({ error: 'KV not available' }), { status: 500 })
+  }
+
+  try {
+    const { key } = await request.json()
+
+    if (!key) {
+      return new Response(JSON.stringify({ error: 'Key is required' }), { status: 400 })
+    }
+
+    await platform.env.BINDING_NAME.delete(key)
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  catch (error) {
+    return new Response(JSON.stringify({ error: (error as Error).message }), { status: 500 })
+  }
+}

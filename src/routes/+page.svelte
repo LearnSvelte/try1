@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { page } from '$app/state'
+
   import { catchError } from '$lib/catchError'
   import { saveURL } from '$lib/saveURL'
 
   let url: string = ''
   let slug: string = ''
-  let currentUrl = window.location.href
 
   async function handleSubmit (event: Event) {
     event.preventDefault()
@@ -34,7 +35,7 @@
     <input
       type="text"
       disabled
-      bind:value={currentUrl}
+      bind:value={page.url}
       style="text-align: right"
     />
     <input
