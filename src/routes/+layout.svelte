@@ -1,4 +1,6 @@
 <script>
+  import '@picocss/pico/css/pico.classless.min.css'
+
   const icons = ['⚔️', '🗡️', '🏹', '🔥', '🔪', '🪓', '✂️']
   const selectedIcon = icons[Math.floor(Math.random() * icons.length)]
 </script>
