@@ -34,8 +34,8 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     return new Response(`Saved ${key}`, { status: 200 })
   }
   catch (error) {
-    console.error('❌ KV put error:', error)
-    return new Response(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`, { status: 500 })
+    console.error('KV put error:', error)
+    return new Response(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, { status: 500 })
   }
 }
 

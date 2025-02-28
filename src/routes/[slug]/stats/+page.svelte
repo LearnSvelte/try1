@@ -1,18 +1,26 @@
 <script lang="ts">
   import StatsTable from '$lib/components/StatsTable.svelte'
+  import { page } from '$app/state'
 
-  export let data
+  const { data } = $props();
 
-// console.log(data)
+  const pageUrl = page.url
+  // let redirectUrl = page.url.split('/').slice(0, -1).join('/');
+
+  // let redirectUrl = $derived(page.url, (u) => {
+  //   return u.split('/').slice(0, -1).join('/');
+  // });
+
+  let shortUrl = $derived(pageUrl.toString().split('/').slice(0, -1).join('/'));
 </script>
 
-<!-- <p>{typeof data.stats}</p> -->
-<!-- <p>{data.stats}</p> -->
-<p>{data.url ?? 'url is missing'}</p>
-
-<!-- <p>{data.stats}</p> -->
+<!-- <p>{pageUrl}</p> -->
+<p>
+  <a href={shortUrl}>{shortUrl}</a> 👉
+  {data.url ?? 'url is missing'}</p>
 
 {#if data.stats}
+  <p>Total redirects: {data.stats.length}</p>
   <StatsTable stats={data.stats} />
 {:else}
   <p>No stats yet</p>

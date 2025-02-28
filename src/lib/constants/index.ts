@@ -1,5 +1,6 @@
 export {
   buildKvPrefixSlug,
+  getSlugFromPrefixedSlugKey,
   KV_PREFIX_SLUG,
 } from './slug'
 
