@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from '$app/state'
-
   import { catchError } from '$lib/catchError'
+
+  import RedirectPreview from '$lib/components/RedirectPreview.svelte'
   import { SAVE_ERRORS, saveURL } from '$lib/saveURL'
 
   let url: string = $state('')
@@ -59,8 +60,16 @@
     }
   }
 
+  function resetFormData () {
+    submitState = 'idle'
+    url = ''
+    slug = ''
+  }
+
   function handleReset () {
     submitState = 'idle'
+    url = ''
+    slug = ''
 
     setTimeout(() => {
       myUrl = page.url
@@ -75,6 +84,7 @@
 
   let isUrlMarkedInvalid = $derived(submitState === 'idle' ? null : !isUrlValid)
   let isSlugMarkedInvalid = $derived(submitState === 'idle' ? null : !isSlugValid)
+  let shortUrl = $derived(`/${slug}`)
 
   function getIsSubmitDisabled () {
     if (submitState === 'validating' && isUrlValid && isSlugValid)
@@ -85,68 +95,79 @@
 
 <!-- <p>{submitState}</p> -->
 
-<form
-  method="POST"
-  onsubmit={handleSubmit}
-  onreset={handleReset}
->
-  <input
-    type="url"
-    name="url"
-    placeholder="URL"
-    bind:value={url}
-    required
-    title="Please enter a valid URL starting with http:// or https://"
-    autocomplete="off"
-    aria-invalid={isUrlMarkedInvalid}
-    style="text-align: center"
-    oninput={handleUrlInput}
-  />
+{#if submitState === 'success'}
+  <RedirectPreview slug={slug} longUrl={url} />
 
-  <!-- svelte-ignore a11y_no_redundant_roles -->
-  <fieldset role="group">
+  <button
+    type="button"
+    onclick={resetFormData}
+  >
+    Shorten another url
+  </button>
+{:else}
+  <form
+    method="POST"
+    onsubmit={handleSubmit}
+    onreset={handleReset}
+  >
     <input
-      type="text"
-      bind:value={myUrl}
-      disabled
-      readonly
-      style="text-align: right; width: 50%"
-    />
-    <input
-      type="text"
-      name="slug"
-      placeholder="slug"
+      type="url"
+      name="url"
+      placeholder="URL"
+      bind:value={url}
       required
-      pattern="[A-Za-z0-9_\-]+"
+      title="Please enter a valid URL starting with http:// or https://"
       autocomplete="off"
-      title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
-      bind:value={slug}
-      aria-invalid={isSlugMarkedInvalid}
-      style="width: 50%"
-      oninput={validateSlug}
+      aria-invalid={isUrlMarkedInvalid}
+      style="text-align: center"
+      oninput={handleUrlInput}
     />
-  </fieldset>
 
-  <div style="display: flex; gap: 1em; justify-content: center">
-    <button
-      type="reset"
-      disabled={url === '' && slug === ''}
-      style="width: 50%"
-    >
-      Reset
-    </button>
+    <!-- svelte-ignore a11y_no_redundant_roles -->
+    <fieldset role="group">
+      <input
+        type="text"
+        bind:value={myUrl}
+        disabled
+        readonly
+        style="text-align: right; width: 50%"
+      />
+      <input
+        type="text"
+        name="slug"
+        placeholder="slug"
+        required
+        pattern="[A-Za-z0-9_\-]+"
+        autocomplete="off"
+        title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
+        bind:value={slug}
+        aria-invalid={isSlugMarkedInvalid}
+        style="width: 50%"
+        oninput={validateSlug}
+      />
+    </fieldset>
 
-    <button
-      type="submit"
-      disabled={getIsSubmitDisabled()}
-      style="width: 50%"
-      onclick={handleSubmit}
-    >
-      Submit
-    </button>
-  </div>
+    <div style="display: flex; gap: 1em; justify-content: center">
+      <button
+        type="reset"
+        disabled={url === '' && slug === ''}
+        style="width: 50%"
+      >
+        Reset
+      </button>
 
-</form>
+      <button
+        type="submit"
+        disabled={getIsSubmitDisabled()}
+        style="width: 50%"
+        onclick={handleSubmit}
+      >
+        Submit
+      </button>
+    </div>
+
+  </form>
+{/if}
 
 {#if submitState === 'error'}
   <p>
