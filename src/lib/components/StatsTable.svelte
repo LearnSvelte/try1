@@ -9,7 +9,9 @@
 </script>
 
 <div>
-  {#if stats.length === 0}
+  {#if !Array.isArray(stats)}
+    <p>No stats!</p>
+  {:else if stats.length === 0}
     <p>No stats yet</p>
   {:else}
     <table>

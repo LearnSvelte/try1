@@ -1,3 +1,4 @@
+import type { Stat } from '$lib/types/stats'
 import type { PageServerLoad } from './$types'
 import { SLUG_PREFIX } from '$lib/constants/slug'
 import { redirect } from '@sveltejs/kit'
@@ -23,20 +24,20 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   }
 
   if (url) {
-    const clickData = {
-      country: country,
-      ip: ip,
-      userAgent: userAgent,
-      timestamp: timestamp
+    const clickData: Stat = {
+      country,
+      ip,
+      userAgent,
+      timestamp,
     }
 
-    const response = await fetch('/api/click', {
+    const _response = await fetch('/api/stats', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slug, data: clickData }),
+      body: JSON.stringify({ slug, url, stat: clickData }),
     })
 
-    console.log('response:', response)
+    // console.log('response:', response)
 
     // count visit
     return redirect(302, url)

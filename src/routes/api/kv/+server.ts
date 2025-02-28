@@ -1,6 +1,6 @@
-import type { RequestHandler, RequestEvent } from './$types'
-import { json } from '@sveltejs/kit';
-import { getKV } from '$lib/server/getKV';
+import type { RequestHandler } from './$types'
+import { getKV } from '$lib/server/getKV'
+import { json } from '@sveltejs/kit'
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   const [res, kv] = getKV(platform)
@@ -8,9 +8,9 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     return res
 
   try {
-    const { key, value } = (await request.json()) as { key?: string; value?: string };
+    const { key, value } = (await request.json()) as { key?: string, value?: string }
     if (!key || !value)
-      return json({ error: 'Missing key or value' }, { status: 400 });
+      return json({ error: 'Missing key or value' }, { status: 400 })
 
     await kv.put(key, value)
     return new Response(`Saved ${key}: ${value}`, { status: 200 })
@@ -67,7 +67,7 @@ export const DELETE: RequestHandler = async ({ platform, request }) => {
     return res
 
   try {
-    const { key } = (await request.json()) as { key?: string };
+    const { key } = (await request.json()) as { key?: string }
 
     if (!key)
       return new Response(JSON.stringify({ error: 'Key is required' }), { status: 400 })
