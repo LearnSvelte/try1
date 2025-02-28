@@ -1,43 +1,37 @@
-import type { RequestHandler } from './$types'
+import type { RequestHandler, RequestEvent } from './$types'
+import { json } from '@sveltejs/kit';
+
+function getKV (platform: RequestEvent['platform']): [null, KVNamespace] | [Response] {
+  if (!platform || !platform.env)
+    return [new Response('Platform env is undefined', { status: 500 })]
+  const kv = platform.env.BINDING_NAME
+  if (!kv)
+    return [new Response('KV binding is missing', { status: 500 })]
+  return [null, kv]
+}
 
 export const POST: RequestHandler = async ({ request, platform }) => {
-  if (!platform || !platform.env) {
-    return new Response('❌ Platform env is undefined', { status: 500 })
-  }
-
-  const kv = platform.env.BINDING_NAME
-
-  if (!kv) {
-    return new Response('❌ KV binding is missing', { status: 500 })
-  }
+  const [res, kv] = getKV(platform)
+  if (res)
+    return res
 
   try {
-    const { key, value } = await request.json()
+    const { key, value } = (await request.json()) as { key?: string; value?: string };
+    if (!key || !value)
+      return json({ error: 'Missing key or value' }, { status: 400 });
     await kv.put(key, value)
-    return new Response(`✅ Saved ${key}: ${value}`, { status: 200 })
+    return new Response(`Saved ${key}: ${value}`, { status: 200 })
   }
   catch (error) {
-    console.error('❌ KV put error:', error)
-    return new Response(`❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`, { status: 500 })
+    console.error('KV put error:', error)
+    return new Response(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`, { status: 500 })
   }
 }
 
 export const GET: RequestHandler = async ({ request, platform }) => {
-  if (!platform || !platform.env) {
-    return new Response(JSON.stringify({ error: 'Platform env is undefined' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
-  const kv = platform.env.BINDING_NAME
-
-  if (!kv) {
-    return new Response(JSON.stringify({ error: 'KV binding is missing' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
+  const [res, kv] = getKV(platform)
+  if (res)
+    return res
 
   try {
     const url = new URL(request.url)
@@ -64,7 +58,6 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     )
   }
   catch (error) {
-    console.error('❌ KV get error:', error)
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       {
@@ -76,18 +69,17 @@ export const GET: RequestHandler = async ({ request, platform }) => {
 }
 
 export const DELETE: RequestHandler = async ({ platform, request }) => {
-  if (!platform?.env?.BINDING_NAME) {
-    return new Response(JSON.stringify({ error: 'KV not available' }), { status: 500 })
-  }
+  const [res, kv] = getKV(platform)
+  if (res)
+    return res
 
   try {
-    const { key } = await request.json()
+    const { key } = (await request.json()) as { key?: string };
 
-    if (!key) {
+    if (!key)
       return new Response(JSON.stringify({ error: 'Key is required' }), { status: 400 })
-    }
 
-    await platform.env.BINDING_NAME.delete(key)
+    await kv.delete(key)
 
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' },
