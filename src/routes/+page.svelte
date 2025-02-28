@@ -116,6 +116,7 @@
     <input
       type="text"
       bind:value={myUrl}
+      disabled
       readonly
       style="text-align: right"
     />
@@ -133,21 +134,24 @@
     />
   </fieldset>
 
-  <fieldset role="group">
+  <div style="display: flex; gap: 1em; justify-content: center">
     <button
       type="reset"
       disabled={url === '' && slug === ''}
+      style="width: 50%"
     >
       Reset
     </button>
+
     <button
       type="submit"
       disabled={getIsSubmitDisabled()}
+      style="width: 50%"
       onclick={handleSubmit}
     >
       Submit
     </button>
-  </fieldset>
+  </div>
 
 </form>
 
