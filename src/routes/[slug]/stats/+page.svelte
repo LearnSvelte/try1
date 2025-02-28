@@ -6,7 +6,7 @@
 
   const pageUrl = page.url
 
-  let shortUrl = $derived(pageUrl.toString().split('/').slice(0, -1).join('/'));
+  let shortUrl = $derived(pageUrl.toString().split('/').slice(0, -1).join('/'))
 </script>
 
 <p>

@@ -109,7 +109,7 @@
       bind:value={myUrl}
       disabled
       readonly
-      style="text-align: right"
+      style="text-align: right; width: 50%"
     />
     <input
       type="text"
@@ -121,6 +121,7 @@
       title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
       bind:value={slug}
       aria-invalid={getIsSlugValid()}
+      style="width: 50%"
       oninput={validateSlug}
     />
   </fieldset>

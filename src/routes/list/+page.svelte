@@ -41,7 +41,12 @@
     <li>
       <a href="/{slug}">{slug}</a>
       <a href="/{slug}/stats">(stats)</a>
-      <button type="button" data-slug={slug} onclick={deleteKey}>delete</button>
+      <button
+        type="button"
+        data-slug={slug}
+        style="padding: 0.5em"
+        onclick={deleteKey}
+      >🚮 delete</button>
     </li>
   {/each}
 </ul>
