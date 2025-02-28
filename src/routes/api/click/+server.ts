@@ -1,19 +1,22 @@
 import type { RequestHandler } from './$types'
 import { CLICK_PREFIX } from '$lib/constants/click'
+import { getKV } from '$lib/server/getKV';
+import { json } from '@sveltejs/kit';
+
 
 export const POST: RequestHandler = async ({ request, platform }) => {
-  if (!platform || !platform.env) {
-    return new Response('❌ Platform env is undefined', { status: 500 })
-  }
-
-  const kv = platform.env.BINDING_NAME
-
-  if (!kv) {
-    return new Response('❌ KV binding is missing', { status: 500 })
-  }
+  const [res, kv] = getKV(platform)
+  if (res)
+    return res
 
   try {
-    const { slug, data } = await request.json()
+    // const { slug, data } = await request.json()
+
+    const { slug, data } = (await request.json()) as { slug?: string; data?: string };
+    if (!slug || !data)
+      return json({ error: 'Missing slug or data' }, { status: 400 });
+
+
 
     const previousValue = await kv.get(`${CLICK_PREFIX}${slug}`, 'json')
     const value = previousValue ? [data, ...previousValue] : [data]

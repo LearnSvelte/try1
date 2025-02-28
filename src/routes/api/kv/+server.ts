@@ -1,14 +1,6 @@
 import type { RequestHandler, RequestEvent } from './$types'
 import { json } from '@sveltejs/kit';
-
-function getKV (platform: RequestEvent['platform']): [null, KVNamespace] | [Response] {
-  if (!platform || !platform.env)
-    return [new Response('Platform env is undefined', { status: 500 })]
-  const kv = platform.env.BINDING_NAME
-  if (!kv)
-    return [new Response('KV binding is missing', { status: 500 })]
-  return [null, kv]
-}
+import { getKV } from '$lib/server/getKV';
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   const [res, kv] = getKV(platform)
@@ -19,6 +11,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const { key, value } = (await request.json()) as { key?: string; value?: string };
     if (!key || !value)
       return json({ error: 'Missing key or value' }, { status: 400 });
+
     await kv.put(key, value)
     return new Response(`Saved ${key}: ${value}`, { status: 200 })
   }

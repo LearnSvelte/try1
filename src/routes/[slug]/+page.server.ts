@@ -5,10 +5,10 @@ import { redirect } from '@sveltejs/kit'
 export const load: PageServerLoad = async ({ params, platform, request, fetch }) => {
   console.log('load --------------------------------------------------')
 
-  const _country = request.headers.get('cf-ipcountry') ?? 'Unknown'
-  const _ip = request.headers.get('cf-connecting-ip') ?? 'Unknown'
-  const _userAgent = request.headers.get('user-agent') ?? 'Unknown'
-  const _timestamp = new Date().toISOString()
+  const country = request.headers.get('cf-ipcountry') ?? 'Unknown'
+  const ip = request.headers.get('cf-connecting-ip') ?? 'Unknown'
+  const userAgent = request.headers.get('user-agent') ?? 'Unknown'
+  const timestamp = new Date().toISOString()
 
   const { slug } = params
   const key = `${SLUG_PREFIX}${slug}`
@@ -23,7 +23,12 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   }
 
   if (url) {
-    const clickData = { country: _country, ip: _ip, userAgent: _userAgent, timestamp: _timestamp }
+    const clickData = {
+      country: country,
+      ip: ip,
+      userAgent: userAgent,
+      timestamp: timestamp
+    }
 
     const response = await fetch('/api/click', {
       method: 'POST',
