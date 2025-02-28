@@ -1,6 +1,6 @@
 <!-- TODO: get long url -->
 <script lang="ts">
-  const { data } = $props();
+  const { data } = $props()
 
 </script>
 

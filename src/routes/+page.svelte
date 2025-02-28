@@ -1,28 +1,25 @@
 <script lang="ts">
   import { page } from '$app/state'
-  import { enhance } from '$app/forms';
 
   import { catchError } from '$lib/catchError'
-  import { saveURL, SAVE_ERRORS } from '$lib/saveURL'
+  import { SAVE_ERRORS, saveURL } from '$lib/saveURL'
 
   let url: string = $state('')
   let myUrl = $state(page.url)
   let slug: string = $state('')
   let error: string = $state('')
   let submitState: 'idle' | 'validating' | 'submitting' | 'success' | 'error' = $state('idle')
-  let urlIsValid = $state(false)
-  let slugIsValid = $state(false)
-
+  let isUrlValid = $state(false)
+  let isSlugValid = $state(false)
   const takenSlugs: string[] = []
 
   function validateUrl () {
     try {
       const _newUrl = new URL(url)
-      urlIsValid = true
+      isUrlValid = true
     }
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    catch (_err: unknown) {
-      urlIsValid = false
+    catch {
+      isUrlValid = false
     }
   }
 
@@ -31,10 +28,10 @@
       submitState = 'validating'
 
     if (takenSlugs.includes(slug)) {
-      slugIsValid = false
+      isSlugValid = false
       return
     }
-    slugIsValid = /^[\w\-]+$/.test(slug)
+    isSlugValid = /^[\w\-]+$/.test(slug)
   }
 
   async function handleSubmit (event: Event) {
@@ -44,7 +41,7 @@
     validateUrl()
     validateSlug()
 
-    if (!urlIsValid || !slugIsValid)
+    if (!isUrlValid || !isSlugValid)
       return
 
     submitState = 'submitting'
@@ -54,7 +51,7 @@
       error = err.message
       if (err.message === SAVE_ERRORS.KEY_EXISTS) {
         takenSlugs.push(slug)
-        slugIsValid = false
+        isSlugValid = false
       }
     }
     else {
@@ -76,20 +73,11 @@
     validateUrl()
   }
 
-  function getIsUrlValid () {
-    if (submitState === 'idle')
-      return null
-    return urlIsValid ? 'false' : 'true'
-  }
-
-  function getIsSlugValid () {
-    if (submitState === 'idle')
-      return null
-    return slugIsValid ? 'false' : 'true'
-  }
+  let isUrlMarkedInvalid = $derived(submitState === 'idle' ? null : !isUrlValid)
+  let isSlugMarkedInvalid = $derived(submitState === 'idle' ? null : !isSlugValid)
 
   function getIsSubmitDisabled () {
-    if (submitState === 'validating' && urlIsValid && slugIsValid)
+    if (submitState === 'validating' && isUrlValid && isSlugValid)
       return false
     return submitState !== 'idle'
   }
@@ -101,18 +89,6 @@
   method="POST"
   onsubmit={handleSubmit}
   onreset={handleReset}
-
-  use:enhance={({ formElement, formData, action, cancel }) => {
-    console.log('enhance', formElement, formData, action, cancel);
-		return async ({ result }) => {
-			// `result` is an `ActionResult` object
-			if (result.type === 'redirect') {
-				// goto(result.location);
-			} else {
-				// await applyAction(result);
-			}
-		};
-	}}
 >
   <input
     type="url"
@@ -122,7 +98,7 @@
     required
     title="Please enter a valid URL starting with http:// or https://"
     autocomplete="off"
-    aria-invalid={getIsUrlValid()}
+    aria-invalid={isUrlMarkedInvalid}
     style="text-align: center"
     oninput={handleUrlInput}
   />
@@ -145,7 +121,7 @@
       autocomplete="off"
       title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
       bind:value={slug}
-      aria-invalid={getIsSlugValid()}
+      aria-invalid={isSlugMarkedInvalid}
       style="width: 50%"
       oninput={validateSlug}
     />
@@ -176,7 +152,7 @@
   <p>
     {error}
   </p>
-  {:else if takenSlugs.includes(slug)}
+{:else if takenSlugs.includes(slug)}
   <p>
     {SAVE_ERRORS.KEY_EXISTS}
   </p>

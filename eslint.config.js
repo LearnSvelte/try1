@@ -36,6 +36,9 @@ export default antfu(
           ignoreRestSiblings: true,
         },
       ],
+
+      'antfu/if-newline': 0,
+      'prefer-const': 0,
     },
   },
 )
