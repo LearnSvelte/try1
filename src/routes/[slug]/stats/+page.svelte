@@ -1,8 +1,10 @@
 <script lang="ts">
-  export let data
+  import StatsTable from '$lib/components/StatsTable.svelte'
 
+  export let data
 </script>
 
-<p>stats</p>
-<!-- <p>{JSON.stringify(data.stats)}</p> -->
-<p>{data.stats}</p>
+<!-- <p>{typeof data.stats}</p> -->
+<!-- <p>{data.stats}</p> -->
+
+<StatsTable stats={data.stats} />

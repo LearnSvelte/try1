@@ -23,11 +23,7 @@ export const load: PageServerLoad = async ({ params, platform, request, fetch })
   }
 
   if (url) {
-    const clickData = JSON.stringify({ country: _country, ip: _ip, userAgent: _userAgent, timestamp: _timestamp })
-
-    // const res = url = await platform?.env.BINDING_NAME.put(key, 'text')
-
-    // await saveClick({ slug, value: clickData })
+    const clickData = { country: _country, ip: _ip, userAgent: _userAgent, timestamp: _timestamp }
 
     const response = await fetch('/api/click', {
       method: 'POST',
