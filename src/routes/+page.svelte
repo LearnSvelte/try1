@@ -30,7 +30,6 @@
   }
 
   async function handleSubmit (event: Event) {
-    console.log('Submitting form...')
     submitState = 'validating'
     event.preventDefault()
 
@@ -40,25 +39,18 @@
     if (!urlIsValid || !slugIsValid)
       return
 
-    console.log('Long URL:', url)
-    console.log('Short URL:', slug)
-
     submitState = 'submitting'
     const [err, data] = await catchError(saveURL({ url, slug }))
     if (err) {
       submitState = 'error'
-      console.log('Error @:', err)
-      console.log('Error @2:', err.message)
       error = err.message
     }
     else {
       submitState = 'success'
     }
-    console.log('Error:', err)
-    console.log('Data:', data)
   }
 
-  function handleReset (event: Event) {
+  function handleReset () {
     submitState = 'idle'
 
     setTimeout(() => {
@@ -66,8 +58,7 @@
     })
   }
 
-  function handleUrlInput (event: Event) {
-    console.log('URL changed:', url)
+  function handleUrlInput () {
     if (submitState === 'idle')
       return
     validateUrl()
@@ -92,7 +83,7 @@
   }
 </script>
 
-<p>{submitState}</p>
+<!-- <p>{submitState}</p> -->
 
 <form
   onsubmit={handleSubmit}
