@@ -1,8 +1,9 @@
 <script lang="ts">
   import { page } from '$app/state'
+  import { enhance } from '$app/forms';
 
   import { catchError } from '$lib/catchError'
-  import { saveURL } from '$lib/saveURL'
+  import { saveURL, SAVE_ERRORS } from '$lib/saveURL'
 
   let url: string = $state('')
   let myUrl = $state(page.url)
@@ -11,6 +12,8 @@
   let submitState: 'idle' | 'validating' | 'submitting' | 'success' | 'error' = $state('idle')
   let urlIsValid = $state(false)
   let slugIsValid = $state(false)
+
+  const takenSlugs: string[] = []
 
   function validateUrl () {
     try {
@@ -26,6 +29,11 @@
   function validateSlug (): void {
     if (submitState === 'error')
       submitState = 'validating'
+
+    if (takenSlugs.includes(slug)) {
+      slugIsValid = false
+      return
+    }
     slugIsValid = /^[\w\-]+$/.test(slug)
   }
 
@@ -44,6 +52,10 @@
     if (err) {
       submitState = 'error'
       error = err.message
+      if (err.message === SAVE_ERRORS.KEY_EXISTS) {
+        takenSlugs.push(slug)
+        slugIsValid = false
+      }
     }
     else {
       submitState = 'success'
@@ -86,8 +98,21 @@
 <!-- <p>{submitState}</p> -->
 
 <form
+  method="POST"
   onsubmit={handleSubmit}
   onreset={handleReset}
+
+  use:enhance={({ formElement, formData, action, cancel }) => {
+    console.log('enhance', formElement, formData, action, cancel);
+		return async ({ result }) => {
+			// `result` is an `ActionResult` object
+			if (result.type === 'redirect') {
+				// goto(result.location);
+			} else {
+				// await applyAction(result);
+			}
+		};
+	}}
 >
   <input
     type="url"
@@ -150,6 +175,10 @@
 {#if submitState === 'error'}
   <p>
     {error}
+  </p>
+  {:else if takenSlugs.includes(slug)}
+  <p>
+    {SAVE_ERRORS.KEY_EXISTS}
   </p>
 {/if}
 
