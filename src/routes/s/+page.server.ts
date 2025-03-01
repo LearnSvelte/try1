@@ -1,5 +1,5 @@
 import type { Actions, PageServerLoad } from './$types'
-import { fail, redirect } from '@sveltejs/kit'
+import { error, fail, redirect } from '@sveltejs/kit'
 
 // export const load: PageServerLoad = async () => {
 //   return {
@@ -13,11 +13,38 @@ export const actions = {
     const url = data.get('url')
     const slug = data.get('slug')
 
-    await fetch('/api/saveShortUrl', {
+    const res = await fetch('/api/saveShortUrl', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slug, url }),
     })
+
+    if (!res.ok) {
+      const body: {error: string, errorCode: string} = await res.json()
+
+      console.log('Error:--------', body, res.status);
+
+      if (res.status === 409) {
+        return fail(409, { slug, exists: true, formState: 'error'});
+
+
+        // return {
+        //   // formState: 'error',
+        //   status: 409,
+        //   submittedUrl: url,
+        //   submittedSlug: slug,
+        //   error: 'Slug already exists',
+        // }
+      }
+
+      // return error(res.status, body)
+      return {
+        formState: 'error',
+        submittedUrl: url,
+        submittedSlug: slug,
+        error: 'R Unknown error',
+      }
+    }
 
     // const _response = await fetch('/api/stats', {
     //   method: 'POST',

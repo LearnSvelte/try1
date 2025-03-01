@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { PageProps } from './$types'
+  import { validateSlug } from '$lib/validation/validateSlug'
+  import { validateUrl } from '$lib/validation/validateUrl'
 
   let { form }: PageProps = $props()
 
@@ -12,82 +14,43 @@
   // let { form } = $props
 
   let url: string = $state('')
-  let submittedUrl: string = $state('')
-  let submittedSlug: string = $state('')
+  // let submittedUrl: string = $state('')
+  // let submittedSlug: string = $state('')
   let myUrl = $state(page.url.origin)
   let slug: string = $state('')
-  let error: string = $state('')
-  let isUrlValid = $state(false)
-  let isSlugValid: boolean = $state(false)
-  const takenSlugs: string[] = []
-  let submitState: 'idle' | 'validating' | 'submitting' | 'success' | 'error' = $state('idle')
+  // let error: string = $state('')
+  // let isUrlValid = $state(false)
+  // let isSlugValid: boolean = $state(false)
+  const takenSlugs: string[] = $state([])
+  let submitState: 'idle' | 'submitting' | 'success' | 'error' = $state('idle')
+
+  let isValidationAllowed = $state(false)
 
   let validationState: 'idle' | 'validating' = $state('idle')
 
-  function validateUrl () {
-    try {
-      const _url = new URL(url)
-      isUrlValid = true
-    }
-    catch {
-      isUrlValid = false
-    }
-  }
-
-  function validateSlug (): void {
-    // if (submitState === 'error')
-    //   submitState = 'validating'
-    if (validationState === 'idle') return
-
-    if (takenSlugs.includes(slug)) {
-      isSlugValid = false
-      return
-    }
-    isSlugValid = /^[\w\-]+$/.test(slug)
-  }
-
-  function handleUrlInput () {
-    if (validationState === 'idle') return
-    validateUrl()
-  }
-
-  let isUrlMarkedInvalid = $derived(validationState === 'idle' ? null : !isUrlValid)
-  let isSlugMarkedInvalid = $derived(validationState === 'idle' ? null : !isSlugValid)
+  const slugValidation = $derived(validateSlug(slug, takenSlugs))
+  const urlValidation = $derived(validateUrl(url))
 
   async function handleSubmit (event: Event) {
     event.preventDefault()
-    validationState = 'validating'
-    // submitState = 'validating'
+    isValidationAllowed = true
 
-    validateUrl()
-    validateSlug()
-
-    if (!isUrlValid || !isSlugValid)
+    if (!urlValidation.isValid || !slugValidation.isValid)
       return
 
     submitState = 'submitting'
-  // const [err, data] = await catchError(saveURL({ url, slug }))
-    // if (err) {
-    //   submitState = 'error'
-    //   error = err.message
-    //   if (err.message === SAVE_ERRORS.KEY_EXISTS) {
-    //     takenSlugs.push(slug)
-    //     slugIsValid = false
-    //   }
-    // }
-    // else {
-    //   submitState = 'success'
-    // }
   }
 
-  function resetFormData () {
-    submitState = 'idle'
-    validationState = 'idle'
-    url = ''
-    slug = ''
-  }
+// function resetFormData () {
+  //   submitState = 'idle'
+  //   validationState = 'idle'
+  //   url = ''
+  //   slug = ''
+  // }
 </script>
 
+<p>validationState: {validationState}</p>
+<p>takenSlugs: {takenSlugs}</p>
 <p>{JSON.stringify(form ?? {})}</p>
 
 {#if form?.formState === 'success'}
@@ -104,10 +67,23 @@
   action="?/save"
   onsubmit={handleSubmit}
   use:enhance={() => {
-    return async ({ update }) => {
+    return async ({ update, result }) => {
       await update({ invalidateAll: true })
-      submitState = 'success'
-      validationState = 'idle'
+      console.log('result', result)
+
+      if (result.type === 'failure') {
+        submitState = 'error'
+        validationState = 'validating' // deprecated
+        isValidationAllowed = true
+        const slug = result?.data?.slug
+        if (typeof slug === 'string') takenSlugs.push(slug)
+
+        console.log('fail', slug, takenSlugs)
+      }
+      else {
+        submitState = 'success'
+        validationState = 'idle'
+      }
     }
   }}
 >
@@ -125,10 +101,9 @@
       bind:value={url}
       required
       title="Please enter a valid URL starting with http:// or https://"
-      aria-invalid={isUrlMarkedInvalid}
+      aria-invalid={isValidationAllowed ? !urlValidation.isValid : null}
       autocomplete="off"
       style="text-align: center"
-      oninput={handleUrlInput}
     />
 
     <!-- svelte-ignore a11y_no_redundant_roles -->
@@ -140,20 +115,41 @@
         readonly
         style="text-align: right; width: 50%"
       />
+      <!--         pattern="[A-Za-z0-9_\-]+" -->
       <input
         type="text"
         name="slug"
         placeholder="slug"
         required
-        pattern="[A-Za-z0-9_\-]+"
+        pattern="[A-Za-z0-9]+"
         autocomplete="off"
-        title="Only letters, numbers, hyphens (-), and underscores (_) are allowed. No spaces."
+        title="Only letters, numbers are allowed."
         bind:value={slug}
-        aria-invalid={isSlugMarkedInvalid}
+        aria-invalid={isValidationAllowed ? !slugValidation.isValid : null}
+        aria-describedby={isValidationAllowed && !slugValidation.isValid ? 'slugValidationDescription' : null}
         style="width: 50%"
-        oninput={validateSlug}
       />
+
     </fieldset>
+
+    <!-- {#if !slugValidation.isValid && validationState === 'validating'} -->
+    {#if !slugValidation.isValid}
+      <div style="display: flex; gap: 1em; justify-content: center; margin-top: calc(-1 * var(--pico-spacing))">
+        <p style="width: 50%"></p>
+        <p style="width: 50%">
+          <small id="slugValidationDescription" style="color: var(--pico-del-color);">{slugValidation.errorMessage}</small>
+        </p>
+      </div>
+    {/if}
+
+    <!-- {#if slugValidationMessage}
+      <div style="display: flex; gap: 1em; justify-content: center; margin-top: calc(-1 * var(--pico-spacing))">
+        <p style="width: 50%"></p>
+        <p style="width: 50%">
+          <small id="invalid-helper" style="color: var(--pico-del-color);">{slugValidationMessage}</small>
+        </p>
+      </div>
+    {/if} -->
 
     <div style="display: flex; gap: 1em; justify-content: center">
       <button
