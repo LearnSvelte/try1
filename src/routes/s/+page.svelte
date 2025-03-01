@@ -1,37 +1,30 @@
 <script lang="ts">
   import type { PageProps } from './$types'
-  import { validateSlug } from '$lib/validation/validateSlug'
-  import { validateUrl } from '$lib/validation/validateUrl'
-
-  let { form }: PageProps = $props()
-
   import { enhance } from '$app/forms'
   import { page } from '$app/state'
   import RedirectPreview from '$lib/components/RedirectPreview.svelte'
+  import { validateSlug, validateUrl } from '$lib/validation'
 
-  // export let form: ActionData
-
-  // let { form } = $props
+  let { form }: PageProps = $props()
 
   let url: string = $state('')
-  // let submittedUrl: string = $state('')
-  // let submittedSlug: string = $state('')
-  let myUrl = $state(page.url.origin)
+  let originUrl = $state(page.url.origin)
   let slug: string = $state('')
-  // let error: string = $state('')
-  // let isUrlValid = $state(false)
-  // let isSlugValid: boolean = $state(false)
-  const takenSlugs: string[] = $state([])
   let submitState: 'idle' | 'submitting' | 'success' | 'error' = $state('idle')
-
   let isValidationAllowed = $state(false)
+  const takenSlugs: string[] = $state([])
 
-  let validationState: 'idle' | 'validating' = $state('idle')
+  function addTakenSlug (slug: string) {
+    if (takenSlugs.includes(slug)) return
+    takenSlugs.push(slug)
+  }
 
   const slugValidation = $derived(validateSlug(slug, takenSlugs))
   const urlValidation = $derived(validateUrl(url))
 
   async function handleSubmit (event: Event) {
+    // eslint-disable-next-line no-console
+    console.log('handleSubmit')
     event.preventDefault()
     isValidationAllowed = true
 
@@ -40,16 +33,8 @@
 
     submitState = 'submitting'
   }
-
-// function resetFormData () {
-  //   submitState = 'idle'
-  //   validationState = 'idle'
-  //   url = ''
-  //   slug = ''
-  // }
 </script>
 
-<p>validationState: {validationState}</p>
 <p>takenSlugs: {takenSlugs}</p>
 <p>{JSON.stringify(form ?? {})}</p>
 
@@ -69,20 +54,21 @@
   use:enhance={() => {
     return async ({ update, result }) => {
       await update({ invalidateAll: true })
+      // eslint-disable-next-line no-console
       console.log('result', result)
 
       if (result.type === 'failure') {
         submitState = 'error'
-        validationState = 'validating' // deprecated
         isValidationAllowed = true
         const slug = result?.data?.slug
-        if (typeof slug === 'string') takenSlugs.push(slug)
+        if (typeof slug === 'string') addTakenSlug(slug)
 
+        // eslint-disable-next-line no-console
         console.log('fail', slug, takenSlugs)
       }
       else {
         submitState = 'success'
-        validationState = 'idle'
+        isValidationAllowed = false
       }
     }
   }}
@@ -110,7 +96,7 @@
     <fieldset role="group">
       <input
         type="text"
-        bind:value={myUrl}
+        bind:value={originUrl}
         disabled
         readonly
         style="text-align: right; width: 50%"
@@ -131,21 +117,9 @@
       />
     </fieldset>
 
-    <!-- {#if !slugValidation.isValid && validationState === 'validating'} -->
-    <!-- {#if !slugValidation.isValid} -->
     <p class="validationHelperGrid {slugValidation.isValid ? 'validationHelperGrid--hidden' : 'validationHelperGrid--shown'}">
       <small>{slugValidation.errorMessage}</small>
     </p>
-    <!-- {/if} -->
-
-    <!-- {#if slugValidationMessage}
-      <div style="display: flex; gap: 1em; justify-content: center; margin-top: calc(-1 * var(--pico-spacing))">
-        <p style="width: 50%"></p>
-        <p style="width: 50%">
-          <small id="invalid-helper" style="color: var(--pico-del-color);">{slugValidationMessage}</small>
-        </p>
-      </div>
-    {/if} -->
 
     <div style="display: flex; gap: 1em; justify-content: center">
       <button
@@ -158,6 +132,7 @@
       <button
         type="submit"
         style="width: 50%"
+        disabled={submitState === 'submitting'}
       >
         Submit
       </button>
