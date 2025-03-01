@@ -1,11 +1,13 @@
-// src/lib/kv-utils.ts
 import type { RequestEvent } from '@sveltejs/kit'
+import { errorResponseWithCode } from './errorResponse'
 
-export function getKV(platform: RequestEvent['platform']): [null, KVNamespace] | [Response] {
+export function getKV (platform: RequestEvent['platform']): [null, KVNamespace] | [Response] {
   if (!platform || !platform.env)
-    return [new Response('Platform env is undefined', { status: 500 })]
+    return [errorResponseWithCode('INTERNAL_ERROR', 'Platform env is undefined')]
+
   const kv = platform.env.BINDING_NAME
   if (!kv)
-    return [new Response('KV binding is missing', { status: 500 })]
+    return [errorResponseWithCode('INTERNAL_ERROR', 'KV binding is missing')]
+
   return [null, kv]
 }
