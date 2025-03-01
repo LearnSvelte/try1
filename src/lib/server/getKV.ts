@@ -14,11 +14,11 @@ export function getKV (platform: RequestEvent['platform']): [null, KVNamespace] 
 
 export function getKVAndError (platform: RequestEvent['platform']): [null, KVNamespace] | [Error] {
   if (!platform || !platform.env)
-    return [Error('Platform env is undefined')]
+    return [new Error('Platform env is undefined')]
 
   const kv = platform.env.BINDING_NAME
   if (!kv)
-    return [Error('KV binding is missing')]
+    return [new Error('KV binding is missing')]
 
   return [null, kv]
 }
