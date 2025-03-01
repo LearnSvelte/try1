@@ -129,18 +129,14 @@
         aria-describedby={isValidationAllowed && !slugValidation.isValid ? 'slugValidationDescription' : null}
         style="width: 50%"
       />
-
     </fieldset>
 
     <!-- {#if !slugValidation.isValid && validationState === 'validating'} -->
-    {#if !slugValidation.isValid}
-      <div style="display: flex; gap: 1em; justify-content: center; margin-top: calc(-1 * var(--pico-spacing))">
-        <p style="width: 50%"></p>
-        <p style="width: 50%">
-          <small id="slugValidationDescription" style="color: var(--pico-del-color);">{slugValidation.errorMessage}</small>
-        </p>
-      </div>
-    {/if}
+    <!-- {#if !slugValidation.isValid} -->
+    <p class="validationHelperGrid {slugValidation.isValid ? 'validationHelperGrid--hidden' : 'validationHelperGrid--shown'}">
+      <small>{slugValidation.errorMessage}</small>
+    </p>
+    <!-- {/if} -->
 
     <!-- {#if slugValidationMessage}
       <div style="display: flex; gap: 1em; justify-content: center; margin-top: calc(-1 * var(--pico-spacing))">
@@ -168,3 +164,36 @@
     </div>
   {/if}
 </form>
+
+<style scoped>
+  .validationHelperGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 1em;
+    justify-content: center;
+    color: var(--pico-del-color);
+    margin-top: calc(-0.5 * var(--pico-spacing));
+    margin-bottom: calc(0.5 * var(--pico-spacing));
+    /* height: 0; */
+    transition: grid-template-rows 0.1s;
+  }
+
+  .validationHelperGrid--hidden {
+    grid-template-rows: 0fr;
+  }
+
+  .validationHelperGrid--shown {
+    /* height: auto; */
+    grid-template-rows: 1fr;
+  }
+
+  .validationHelperGrid small {
+    overflow: hidden;
+    grid-column-start: 2;
+  }
+
+  /* .validationHelperGrid small {
+    display: block;
+  } */
+</style>

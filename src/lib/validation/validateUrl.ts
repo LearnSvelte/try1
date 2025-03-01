@@ -1,13 +1,9 @@
-export function validateUrl (url: string): { isValid: boolean, errorMessage: string } {
+export function validateUrl (url: string): { isValid: boolean } {
   try {
-    const parsedUrl = new URL(url)
-    if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      return { isValid: false, errorMessage: 'URL must start with http:// or https://' }
-    }
-
-    return { isValid: true, errorMessage: '' }
+    const _parsedUrl = new URL(url)
+    return { isValid: true }
   }
   catch {
-    return { isValid: false, errorMessage: '' }
+    return { isValid: false }
   }
 }
