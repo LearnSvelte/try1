@@ -1,17 +1,8 @@
 import type { RequestHandler } from './$types'
 import { buildKvPrefixSlug, buildKvPrefixStats } from '$lib/constants'
+import { errorResponseWithCode } from '$lib/server/errorResponse'
 import { getKV } from '$lib/server/getKV'
 import { isNonEmptyString } from '$lib/validation'
-
-const ERROR_MESSAGES = {
-  INVALID_SLUG: 'Invalid slug',
-  UNKNOWN_ERROR: 'Unknown error',
-}
-
-interface ResponseBody {
-  success: boolean
-  error?: string
-}
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   const [res, kv] = getKV(platform)
@@ -21,11 +12,7 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     const { slug }: { slug: unknown } = await request.json()
 
     if (!isNonEmptyString(slug)) {
-      const body: ResponseBody = {
-        success: false,
-        error: ERROR_MESSAGES.INVALID_SLUG,
-      }
-      return new Response(JSON.stringify(body), { status: 400 })
+      return errorResponseWithCode('INVALID_INPUT', 'Invalid slug')
     }
 
     const key1 = buildKvPrefixSlug(slug)
@@ -33,18 +20,9 @@ export const POST: RequestHandler = async ({ request, platform }) => {
 
     await Promise.all([kv.delete(key1), kv.delete(key2)])
 
-    const body: ResponseBody = {
-      success: true,
-    }
-    return new Response(JSON.stringify(body), { status: 204 })
+    return new Response(null, { status: 204 })
   }
   catch (error) {
-    console.error('KV delete url and stats error:', error)
-
-    const body: ResponseBody = {
-      success: false,
-      error: error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN_ERROR,
-    }
-    return new Response(JSON.stringify(body), { status: 500 })
+    return errorResponseWithCode('UNKNOWN_ERROR', error instanceof Error ? error.message : 'Unknown error')
   }
 }

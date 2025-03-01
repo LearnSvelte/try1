@@ -7,7 +7,7 @@
   async function fetchSlugs () {
     const res = await fetch('/api/slugList')
     const keys = await res.json() as string[]
-    slugs = keys.map(k => getSlugFromPrefixedSlugKey(k))
+    slugs = keys.map(k => getSlugFromPrefixedSlugKey(k)).sort()
   }
 
   async function deleteKey (event: Event) {
@@ -22,18 +22,18 @@
       body: JSON.stringify({ slug }),
     })
 
-    const data: {success: boolean, error?: unknown} = await res.json()
+    // const data: { success: boolean, error?: unknown } = await res.json()
 
-    if (data.success) {
-      slugs = slugs.filter(s => s !== slug) // Удаляем из списка
+    // if (data.success) {
+    if (res.ok) {
+      slugs = slugs.filter(s => s !== slug)
     }
     else {
-      alert(`Ошибка удаления: ${data.error}`)
+      console.error(`Delete fails`)
     }
   }
 
   onMount(fetchSlugs)
-
 </script>
 
 <ul>
@@ -44,7 +44,7 @@
       <button
         type="button"
         data-slug={slug}
-        style="padding: 0.5em"
+        style="padding: 0 0.5em"
         onclick={deleteKey}
       >🚮 delete</button>
     </li>
