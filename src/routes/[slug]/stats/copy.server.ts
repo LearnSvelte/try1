@@ -3,21 +3,31 @@ import type { PageServerLoad } from './$types'
 import { catchError } from '$lib/catchError'
 import { buildKvPrefixSlug, buildKvPrefixStats } from '$lib/constants'
 
-import { getKV, getKVAndError } from '$lib/server/getKV'
+import { getKV } from '$lib/server/getKV'
 import { error } from '@sveltejs/kit'
 
 export const load: PageServerLoad = async ({ params, platform }) => {
   const { slug } = params
+  // let url: null | string = null
 
-  const [kvError, kv] = getKVAndError(platform)
-  // const [kvError, kv] = getKVAndError(undefined)
+  const [kvError, kv] = getKV(platform)
+  // const [kvError, kv] = getKV(undefined)
 
-  if (kvError) return error(500, kvError.message)
+  if (kvError) {
+    return {
+      slug,
+      error: kvError,
+    }
+  }
+
+  // if (!kv) {
+  //   return {
+  //     slug,
+  //     error: 'KV not available',
+  //   }
+  // }
 
   const [urlError, url] = await catchError(kv.get(buildKvPrefixSlug(slug), 'text'))
-
-  if (urlError) return error(500, urlError.message)
-  if (!url) return error(404, 'URL not found')
 
   const [statsError, stats] = await catchError(kv.get<Stat[]>(buildKvPrefixStats(slug), 'json'))
 
@@ -25,6 +35,6 @@ export const load: PageServerLoad = async ({ params, platform }) => {
     slug,
     url,
     stats,
-    error: statsError,
+    error: urlError || statsError,
   }
 }

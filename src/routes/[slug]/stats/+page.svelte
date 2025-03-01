@@ -5,6 +5,8 @@
   const { data } = $props()
 </script>
 
+<p>{JSON.stringify(data)}</p>
+
 <RedirectPreview slug={data.slug} longUrl={data.url} />
 
 {#if data.stats}

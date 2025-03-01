@@ -16,6 +16,6 @@ const statusByErrorCode: Record<ErrorCode, number> = {
   UNKNOWN_ERROR: 400,
 }
 
-export function errorResponseWithCode (errorCode: ErrorCode, message: string) {
+export function errorResponseWithCode (errorCode: ErrorCode, message: string): Response {
   return json({ errorCode, error: message }, { status: statusByErrorCode[errorCode] })
 }
