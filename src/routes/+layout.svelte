@@ -10,6 +10,7 @@
     <h1>URL shortener  {selectedIcon}</h1>
     <nav>
       <a href="/">Home</a>
+      <a href="/s">Server Save</a>
       <a href="/list">List</a>
     </nav>
   </header>

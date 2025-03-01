@@ -5,7 +5,7 @@ import { buildKvPrefixSlug, buildKvPrefixStats } from '$lib/constants'
 
 import { getKV } from '$lib/server/getKV'
 
-export const load: PageServerLoad = async ({ params, fetch, platform }) => {
+export const load: PageServerLoad = async ({ params, platform }) => {
   const { slug } = params
   let url: null | string = null
 
