@@ -9,6 +9,7 @@ export default antfu(
     rules: {
       'antfu/if-newline': 0,
       'prefer-const': 0,
+      'prefer-template': 2,
       'style/object-curly-newline': [
         2,
         {
