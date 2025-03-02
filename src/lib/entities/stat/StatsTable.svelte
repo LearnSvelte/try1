@@ -1,10 +1,6 @@
 <script lang="ts">
-  type Stat = {
-    country: string
-    ip: string
-    userAgent: string
-    timestamp: string
-  }
+  import type { Stat } from './types'
+
   export let stats: Stat[]
 </script>
 

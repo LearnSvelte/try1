@@ -1,9 +1,4 @@
-export interface Stat {
-  country: string
-  ip: string
-  userAgent: string
-  timestamp: string
-}
+import type { Stat } from './types'
 
 export function isStatValid (stat: unknown): stat is Stat {
   return (

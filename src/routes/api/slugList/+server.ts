@@ -1,11 +1,11 @@
 import type { RequestHandler } from './$types'
-import { KV_PREFIX_SLUG as prefix } from '$lib/constants'
-import { unknownErrorResponse } from '$lib/server/errorResponse'
-import { getKV } from '$lib/server/getKV'
+import { KV_PREFIX_SLUG as prefix } from '$lib/entities/slug'
+import { getKVOrErrorRes } from '$lib/server'
+import { unknownErrorResponse } from '$lib/shared'
 import { json } from '@sveltejs/kit'
 
 export const GET: RequestHandler = async ({ platform }) => {
-  const [res, kv] = getKV(platform)
+  const [res, kv] = getKVOrErrorRes(platform)
   if (res) return res
 
   try {

@@ -1,5 +1,5 @@
-import type { Stat } from '../types/stats'
-import { isStatsValid } from '../types/stats'
+import type { Stat } from './types'
+import { isStatsValid } from './validation'
 
 const STATS_LIMIT = 4000
 

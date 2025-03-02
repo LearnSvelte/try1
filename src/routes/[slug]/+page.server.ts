@@ -1,15 +1,15 @@
-import type { Stat } from '$lib/types/stats'
+import type { Stat } from '$lib/entities/stat/types'
 import type { PageServerLoad } from './$types'
-import { catchError } from '$lib/catchError'
-import { buildKvPrefixSlug } from '$lib/constants/slug'
-import { getKVAndError } from '$lib/server/getKV'
+import { buildKvPrefixSlug } from '$lib/entities/slug'
+import { getKVOrErrorInstance } from '$lib/server'
+import { catchError } from '$lib/shared'
 import { error, redirect } from '@sveltejs/kit'
 
 export const load: PageServerLoad = async ({ params, platform, request, fetch }) => {
   const { slug } = params
   const key = buildKvPrefixSlug(slug)
 
-  const [kvError, kv] = getKVAndError(platform)
+  const [kvError, kv] = getKVOrErrorInstance(platform)
   if (kvError) return error(500, kvError.message)
 
   const [urlError, url] = await catchError(kv.get(key, 'text'))

@@ -2,8 +2,9 @@
   import type { PageProps } from './$types'
   import { enhance } from '$app/forms'
   import { page } from '$app/state'
-  import RedirectPreview from '$lib/components/RedirectPreview.svelte'
-  import { validateSlug, validateUrl } from '$lib/validation'
+  import { validateSlug } from '$lib/entities/slug'
+  import { validateUrl } from '$lib/entities/url'
+  import { RedirectPreview } from '$lib/widgets/redirectPreview'
 
   let { form }: PageProps = $props()
 
@@ -41,7 +42,7 @@
 
 {#if form?.formState === 'success'}
   {#if form?.submittedUrl && form?.submittedSlug}
-    <RedirectPreview slug={form.submittedSlug} longUrl={form.submittedUrl} />
+    <RedirectPreview slug={form.submittedSlug.toString()} longUrl={form.submittedUrl.toString()} />
   {/if}
   <form method="POST" action="?/resetForm">
     <button type="submit">Shorten another url</button>
