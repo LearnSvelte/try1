@@ -1,6 +1,7 @@
 import type { RequestHandler } from './$types'
 import { buildStatsPayload } from '$lib/dataUtils/buildStatsPayload'
-import { buildKvPrefixStats, getKVOrErrorRes } from '$lib/kv'
+import { buildKvPrefixStats } from '$lib/kv'
+import { getKVOrErrorRes } from '$lib/server'
 import { isStatsValid, isStatValid } from '$lib/types/stats'
 import { isNonEmptyString } from '$lib/validation'
 import { json } from '@sveltejs/kit'

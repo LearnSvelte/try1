@@ -1,9 +1,4 @@
 export {
-  getKVOrErrorInstance,
-  getKVOrErrorRes,
-} from './getKV'
-
-export {
   buildKvPrefixSlug,
   getSlugFromPrefixedSlugKey,
   KV_PREFIX_SLUG,
