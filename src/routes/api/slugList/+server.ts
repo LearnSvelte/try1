@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { KV_PREFIX_SLUG as prefix } from '$lib/kv'
+import { KV_PREFIX_SLUG as prefix } from '$lib/entities/slug'
 import { getKVOrErrorRes } from '$lib/server'
 import { unknownErrorResponse } from '$lib/shared'
 import { json } from '@sveltejs/kit'

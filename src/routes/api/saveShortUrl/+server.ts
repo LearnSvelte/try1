@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { buildKvPrefixSlug } from '$lib/kv'
+import { buildKvPrefixSlug } from '$lib/entities/slug'
 import { getKVOrErrorRes } from '$lib/server'
 import { errorResponseWithCode, isNonEmptyString } from '$lib/shared'
 import { json } from '@sveltejs/kit'

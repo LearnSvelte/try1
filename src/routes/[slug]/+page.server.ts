@@ -1,6 +1,6 @@
-import type { Stat } from '$lib/types/stats'
+import type { Stat } from '$lib/entities/stat/types'
 import type { PageServerLoad } from './$types'
-import { buildKvPrefixSlug } from '$lib/kv'
+import { buildKvPrefixSlug } from '$lib/entities/slug'
 import { getKVOrErrorInstance } from '$lib/server'
 import { catchError } from '$lib/shared'
 import { error, redirect } from '@sveltejs/kit'

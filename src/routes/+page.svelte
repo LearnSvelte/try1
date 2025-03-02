@@ -3,7 +3,8 @@
   import { enhance } from '$app/forms'
   import { page } from '$app/state'
   import RedirectPreview from '$lib/components/RedirectPreview.svelte'
-  import { validateSlug, validateUrl } from '$lib/validation'
+  import { validateSlug } from '$lib/entities/slug'
+  import { validateUrl } from '$lib/entities/url'
 
   let { form }: PageProps = $props()
 
