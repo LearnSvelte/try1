@@ -1,6 +1,7 @@
 <script lang="ts">
-  import RedirectPreview from '$lib/components/RedirectPreview.svelte'
-  import StatsTable from '$lib/components/StatsTable.svelte'
+  import { StatsTable } from '$lib/entities/stat'
+
+  import { RedirectPreview } from '$lib/widgets/redirectPreview'
 
   const { data } = $props()
 </script>

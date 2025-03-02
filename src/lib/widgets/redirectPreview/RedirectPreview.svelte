@@ -1,12 +1,17 @@
 <script lang="ts">
   import { page } from '$app/state'
 
-  let { slug, longUrl } = $props()
+  type Props = {
+    slug: string
+    longUrl: string
+  }
+
+  let { slug, longUrl }: Props = $props()
 
   let shortUrl = $derived(`${page.url.origin}/${slug}`)
 </script>
 
 <p>
   <a href={shortUrl}>{shortUrl}</a> 👉
-  {longUrl ?? 'url is missing'}
+  {longUrl}
 </p>
