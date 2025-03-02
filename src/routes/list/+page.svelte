@@ -18,8 +18,6 @@
     isLoading = true
     const res = await fetch(cursor ? `/api/slugList?cursor=${cursor}` : '/api/slugList')
     const data = await res.json() as ListChunk
-    // slugs = keys.map(k => getSlugFromPrefixedSlugKey(k)).sort()
-    // slugs.push(data.slugs)
     cursor = data.cursor
     addSlugs(data.slugs)
     isLoading = false
@@ -39,8 +37,6 @@
 
     if (res.ok) {
       removeSlug(slug)
-    // slugs = slugs.filter(s => s !== slug)
-      // slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug));
     }
     else {
       console.error(`Delete fails`)
