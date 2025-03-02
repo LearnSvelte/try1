@@ -3,3 +3,4 @@ export {
   errorResponseWithCode,
   unknownErrorResponse,
 } from './errorResponse'
+export { isNonEmptyString } from './isNonEmptyString'

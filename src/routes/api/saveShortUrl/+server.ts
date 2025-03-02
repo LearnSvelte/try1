@@ -1,8 +1,7 @@
 import type { RequestHandler } from './$types'
 import { buildKvPrefixSlug } from '$lib/kv'
 import { getKVOrErrorRes } from '$lib/server'
-import { errorResponseWithCode } from '$lib/shared'
-import { isNonEmptyString } from '$lib/validation'
+import { errorResponseWithCode, isNonEmptyString } from '$lib/shared'
 import { json } from '@sveltejs/kit'
 
 export const POST: RequestHandler = async ({ request, platform }) => {
