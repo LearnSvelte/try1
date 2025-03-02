@@ -1,13 +1,9 @@
 import type { RequestHandler } from './$types'
-import { buildKvPrefixStats } from '$lib/constants'
-// import { buildClickKey, CLICK_PREFIX } from '$lib/constants/click'
 import { buildStatsPayload } from '$lib/dataUtils/buildStatsPayload'
-import { getKVOrErrorRes } from '$lib/server/getKV'
+import { buildKvPrefixStats, getKVOrErrorRes } from '$lib/kv'
 import { isStatsValid, isStatValid } from '$lib/types/stats'
 import { isNonEmptyString } from '$lib/validation'
 import { json } from '@sveltejs/kit'
-
-// rename -> saveStats ?
 
 export const POST: RequestHandler = async ({ request, platform }) => {
   const [res, kv] = getKVOrErrorRes(platform)

@@ -1,10 +1,15 @@
 export {
+  getKVOrErrorInstance,
+  getKVOrErrorRes,
+} from './getKV'
+
+export {
   buildKvPrefixSlug,
   getSlugFromPrefixedSlugKey,
   KV_PREFIX_SLUG,
-} from './slug'
+} from './prefixSlug'
 
 export {
   buildKvPrefixStats,
   KV_PREFIX_STATS,
-} from './stats'
+} from './prefixStats'
