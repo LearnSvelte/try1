@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ platform, request }) => {
   const cursor = url.searchParams.get('cursor')
 
   try {
-    const payload: {cursor?: string, prefix: string, limit: number} = { prefix, limit }
+    const payload: { cursor?: string, prefix: string, limit: number } = { prefix, limit }
     if (cursor) payload.cursor = cursor
 
     const result = await kv.list(payload) as KVNamespaceListResult<unknown, string> & { cursor?: string }

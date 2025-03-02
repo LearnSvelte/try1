@@ -1,15 +1,14 @@
 <script lang="ts">
   import type { ListChunk } from '$lib/entities/listChunk/types'
-  import { getSlugFromPrefixedSlugKey } from '$lib/entities/slug'
   import { onMount } from 'svelte'
-  import { writable } from 'svelte/store';
+  import { writable } from 'svelte/store'
 
-  const slugs = writable<string[]>([]);
-  function addSlugs(newSlugs: string[]) {
-    slugs.update(existingSlugs => [...existingSlugs, ...newSlugs]);
+  const slugs = writable<string[]>([])
+  function addSlugs (newSlugs: string[]) {
+    slugs.update(existingSlugs => [...existingSlugs, ...newSlugs])
   }
-  function removeSlug(slug: string) {
-    slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug));
+  function removeSlug (slug: string) {
+    slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug))
   }
 
   let cursor: string | undefined = $state(undefined)
@@ -40,7 +39,7 @@
 
     if (res.ok) {
       removeSlug(slug)
-      // slugs = slugs.filter(s => s !== slug)
+    // slugs = slugs.filter(s => s !== slug)
       // slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug));
     }
     else {
