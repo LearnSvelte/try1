@@ -13,10 +13,18 @@
 
 <div>
   <header>
-    <h1>URL shortener2 {selectedIcon}</h1>
+    <h1>URL shortener {selectedIcon}</h1>
+
     <nav>
-      <a href="/">Home</a>
-      <a href="/list">List</a>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/list">List</a></li>
+      </ul>
+      <ul>
+        <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+        <li class="light"><a href="#" data-theme-switcher="light">Light</a></li>
+        <li class="dark"><a href="#" data-theme-switcher="dark">Dark</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -28,10 +36,8 @@
 </div>
 
 <style>
-  nav {
-    display: flex;
-    gap: 1em;
-    justify-content: flex-start;
-    margin-bottom: 1em;
-  }
+:global(html[data-theme="dark"]) .dark,
+:global(html[data-theme="light"]) .light {
+  display: none;
+}
 </style>
