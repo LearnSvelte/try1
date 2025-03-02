@@ -21,8 +21,11 @@
         <li><a href="/list">List</a></li>
       </ul>
       <ul>
+        <!-- svelte-ignore a11y_invalid_attribute -->
         <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+        <!-- svelte-ignore a11y_invalid_attribute -->
         <li class="light"><a href="#" data-theme-switcher="light">Light</a></li>
+        <!-- svelte-ignore a11y_invalid_attribute -->
         <li class="dark"><a href="#" data-theme-switcher="dark">Dark</a></li>
       </ul>
     </nav>
