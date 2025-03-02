@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getSlugFromPrefixedSlugKey } from '$lib/constants'
+  import { getSlugFromPrefixedSlugKey } from '$lib/kv'
   import { onMount } from 'svelte'
 
   let slugs: string[] = $state([])
