@@ -41,6 +41,6 @@ export const actions = {
   },
 
   resetForm: async () => {
-    throw redirect(303, '/') // Redirect to force a reload
+    throw redirect(303, '/')
   },
 } satisfies Actions
