@@ -3,11 +3,14 @@
   import { onMount } from 'svelte'
 
   let slugs: string[] = $state([])
+  let isLoading = $state(false)
 
   async function fetchSlugs () {
+    isLoading = true
     const res = await fetch('/api/slugList')
     const keys = await res.json() as string[]
     slugs = keys.map(k => getSlugFromPrefixedSlugKey(k)).sort()
+    isLoading = false
   }
 
   async function deleteKey (event: Event) {
@@ -32,6 +35,8 @@
 
   onMount(fetchSlugs)
 </script>
+
+<p>{isLoading ? 'Loading...' : ''}</p>
 
 <ul>
   {#each slugs as slug}
