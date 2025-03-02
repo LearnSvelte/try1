@@ -1,5 +1,5 @@
 import type { RequestEvent } from '@sveltejs/kit'
-import { errorResponseWithCode } from '../shared'
+import { errorResponseWithCode } from '$lib/shared'
 
 export function getKVOrErrorInstance (platform: RequestEvent['platform']): [Error] | [null, KVNamespace] {
   if (!platform || !platform.env)
