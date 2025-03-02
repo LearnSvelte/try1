@@ -124,7 +124,8 @@
 
       <button
         type="submit"
-        disabled={localState === 'submitting'}
+        aria-busy={localState === 'submitting'}
+        disabled={isValidationAllowed && (!urlValidation.isValid || !slugValidation.isValid)}
       >
         Submit
       </button>
