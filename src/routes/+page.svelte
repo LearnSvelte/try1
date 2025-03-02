@@ -144,7 +144,6 @@
     color: var(--pico-del-color);
     margin-top: calc(-0.5 * var(--pico-spacing));
     margin-bottom: calc(0.5 * var(--pico-spacing));
-    /* height: 0; */
     transition: grid-template-rows 0.1s;
 
     small {
