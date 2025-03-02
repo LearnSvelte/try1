@@ -5,7 +5,6 @@
   if (msg) {
     console.error(msg)
   }
-
 </script>
 
 <h1 data-d>{page.status} {page.error?.message}</h1>
