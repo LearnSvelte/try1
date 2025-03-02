@@ -19,3 +19,7 @@ const statusByErrorCode: Record<ErrorCode, number> = {
 export function errorResponseWithCode (errorCode: ErrorCode, message: string): Response {
   return json({ errorCode, error: message }, { status: statusByErrorCode[errorCode] })
 }
+
+export function unknownErrorResponse (error: unknown): Response {
+  return errorResponseWithCode('UNKNOWN_ERROR', error instanceof Error ? error.message : 'Unknown error')
+}
