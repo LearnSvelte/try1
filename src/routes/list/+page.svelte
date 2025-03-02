@@ -1,13 +1,28 @@
 <script lang="ts">
-  import { getSlugFromPrefixedSlugKey } from '$lib/entities/slug'
+  import type { ListChunk } from '$lib/entities/listChunk/types'
   import { onMount } from 'svelte'
+  import { writable } from 'svelte/store'
 
-  let slugs: string[] = $state([])
+  const slugs = writable<string[]>([])
+  function addSlugs (newSlugs: string[]) {
+    slugs.update(existingSlugs => [...existingSlugs, ...newSlugs])
+  }
+  function removeSlug (slug: string) {
+    slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug))
+  }
+
+  let cursor: string | undefined = $state(undefined)
+  let isLoading = $state(false)
 
   async function fetchSlugs () {
-    const res = await fetch('/api/slugList')
-    const keys = await res.json() as string[]
-    slugs = keys.map(k => getSlugFromPrefixedSlugKey(k)).sort()
+    isLoading = true
+    const res = await fetch(cursor ? `/api/slugList?cursor=${cursor}` : '/api/slugList')
+    const data = await res.json() as ListChunk
+    // slugs = keys.map(k => getSlugFromPrefixedSlugKey(k)).sort()
+    // slugs.push(data.slugs)
+    cursor = data.cursor
+    addSlugs(data.slugs)
+    isLoading = false
   }
 
   async function deleteKey (event: Event) {
@@ -23,7 +38,9 @@
     })
 
     if (res.ok) {
-      slugs = slugs.filter(s => s !== slug)
+      removeSlug(slug)
+    // slugs = slugs.filter(s => s !== slug)
+      // slugs.update(existingSlugs => existingSlugs.filter(s => s !== slug));
     }
     else {
       console.error(`Delete fails`)
@@ -34,7 +51,7 @@
 </script>
 
 <ul>
-  {#each slugs as slug}
+  {#each $slugs as slug}
     <li>
       <a href="/{slug}">{slug}</a>
       <a href="/{slug}/stats">(stats)</a>
@@ -47,3 +64,13 @@
     </li>
   {/each}
 </ul>
+
+<p>{isLoading ? 'Loading...' : ''}</p>
+
+{#if cursor}
+  <button
+    type="button"
+    disabled={isLoading}
+    onclick={fetchSlugs}
+  >Load more</button>
+{/if}
