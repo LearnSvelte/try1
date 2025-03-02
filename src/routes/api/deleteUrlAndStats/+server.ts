@@ -1,11 +1,11 @@
 import type { RequestHandler } from './$types'
 import { buildKvPrefixSlug } from '$lib/entities/slug'
 import { buildKvPrefixStats } from '$lib/entities/stat'
-import { getKVOrErrorInstance } from '$lib/server'
+import { getKVOrErrorRes } from '$lib/server'
 import { errorResponseWithCode, isNonEmptyString } from '$lib/shared'
 
 export const POST: RequestHandler = async ({ request, platform }) => {
-  const [res, kv] = getKVOrErrorInstance(platform)
+  const [res, kv] = getKVOrErrorRes(platform)
   if (res) return res
 
   try {
