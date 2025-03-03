@@ -25,6 +25,7 @@ export const actions = {
       }
 
       return fail(res.status, {
+        exists: undefined,
         formState: 'error',
         submittedUrl: url,
         submittedSlug: slug,

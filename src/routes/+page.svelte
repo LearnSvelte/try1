@@ -1,12 +1,11 @@
 <script lang="ts">
-  import type { PageProps } from './$types'
   import { enhance } from '$app/forms'
   import { page } from '$app/state'
   import { validateSlug } from '$lib/entities/slug'
   import { validateUrl } from '$lib/entities/url'
   import { RedirectPreview } from '$lib/widgets/redirectPreview'
 
-  let { form }: PageProps = $props()
+  let { form } = $props()
 
   let url: string = $state('')
   let originUrl = $state(page.url.origin)
