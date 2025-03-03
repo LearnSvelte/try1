@@ -1,7 +1,16 @@
-export function validateSlug (slug: string, takenSlugs: string[]): {
+import { isNonEmptyString } from '$lib/shared'
+
+export function validateSlug (slug: unknown, takenSlugs: string[] = []): {
   isValid: boolean
   errorMessage: string
 } {
+  if (!isNonEmptyString(slug)) {
+    return {
+      isValid: false,
+      errorMessage: 'Slug must be a non-empty string.',
+    }
+  }
+
   const isValidFormat = /^[a-z0-9]+$/i.test(slug)
 
   const isUnique = !takenSlugs.includes(slug)
