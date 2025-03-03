@@ -1,7 +1,8 @@
 import type { RequestHandler } from './$types'
-import { buildKvPrefixSlug } from '$lib/entities/slug'
+import { buildKvPrefixSlug, validateSlug } from '$lib/entities/slug'
+import { validateUrl } from '$lib/entities/url'
 import { getKVOrErrorRes } from '$lib/server'
-import { errorResponseWithCode, isNonEmptyString } from '$lib/shared'
+import { errorResponseWithCode } from '$lib/shared'
 import { json } from '@sveltejs/kit'
 
 export const POST: RequestHandler = async ({ request, platform }) => {
@@ -10,10 +11,13 @@ export const POST: RequestHandler = async ({ request, platform }) => {
     return kvError
 
   try {
-    const { slug, url }: { slug: unknown, url: unknown } = await request.json()
+    const { slug, url }: { slug?: string, url?: string } = await request.json()
 
-    if (!isNonEmptyString(slug) || !isNonEmptyString(url))
-      return errorResponseWithCode('INVALID_INPUT', 'Invalid slug or url')
+    if (typeof slug !== 'string' || !validateSlug(slug).isValid)
+      return errorResponseWithCode('INVALID_INPUT', 'Invalid slug')
+
+    if (typeof url !== 'string' || !validateUrl(url))
+      return errorResponseWithCode('INVALID_INPUT', 'Invalid url')
 
     const key = buildKvPrefixSlug(slug)
 
