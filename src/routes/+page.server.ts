@@ -14,23 +14,23 @@ export const actions = {
     })
 
     if (!res.ok) {
-      const _body: { error: string, errorCode: string } = await res.json()
-
       if (res.status === 409) {
         return fail(409, {
-          slug,
           exists: true,
           formState: 'error',
+          submittedUrl: url,
+          submittedSlug: slug,
           errorMessage: `Slug "${slug}" already exists!`,
         })
       }
 
-      return {
+      return fail(res.status, {
+        exists: undefined,
         formState: 'error',
         submittedUrl: url,
         submittedSlug: slug,
-        error: 'Unknown error',
-      }
+        errorMessage: 'Unknown error',
+      })
     }
 
     return {
