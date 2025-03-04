@@ -60,7 +60,7 @@
       if (result.type === 'failure') {
         localState = 'error'
         isValidationAllowed = true
-        const slug = result?.data?.slug
+        const slug = result?.data?.submittedSlug
         if (typeof slug === 'string') addTakenSlug(slug)
       }
       else {
